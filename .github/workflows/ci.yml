@@ -61,3 +61,10 @@ jobs:
         run: uv run pytest -m integration
       - name: Reproduce axe-core exactly on W3C BAD
         run: uv run python -m ramp.evals.reproduce_bad
+      - name: Benchmark smoke eval (baseline)
+        run: uv run python -m ramp.evals.runner --subset smoke
+      - name: Upload eval results
+        uses: actions/upload-artifact@v7
+        with:
+          name: eval-results
+          path: evals/results/

@@ -1,5 +1,5 @@
 # Ramp developer entry points. `make help` lists targets.
-.PHONY: help setup browsers up up-core down logs test test-all lint format eval audit mcp fetch-bad reproduce-bad ci
+.PHONY: help setup browsers up up-core down logs test test-all lint format eval audit mcp fetch-bad reproduce-bad eval-smoke benchmark ci
 
 UV ?= uv
 RUN = $(UV) run
@@ -44,8 +44,14 @@ format:  ## Auto-format
 	$(RUN) ruff format .
 	$(RUN) ruff check --fix .
 
-eval:  ## Run the benchmark and write evals/results (Phase 2)
-	@echo "eval harness arrives in Phase 2"
+eval:  ## Run the full benchmark for SYSTEM (default axe-baseline) into evals/results/
+	$(RUN) python -m ramp.evals.runner --system $(or $(SYSTEM),axe-baseline) --subset full
+
+eval-smoke:  ## Fast benchmark subset (what CI runs)
+	$(RUN) python -m ramp.evals.runner --system $(or $(SYSTEM),axe-baseline) --subset smoke
+
+benchmark:  ## Regenerate synthetic/adversarial pages, labels, and the label JSON Schema
+	$(RUN) python benchmark/build_benchmark.py
 
 audit:  ## Audit a URL: make audit URL=https://example.org
 	$(RUN) ramp audit "$(URL)"
