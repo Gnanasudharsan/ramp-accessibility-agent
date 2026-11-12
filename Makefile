@@ -1,5 +1,5 @@
 # Ramp developer entry points. `make help` lists targets.
-.PHONY: help setup browsers up up-core down logs test test-all lint format eval audit mcp fetch-bad reproduce-bad eval-smoke benchmark sandbox sandbox-check redteam ci
+.PHONY: help setup browsers up up-core down logs test test-all lint format eval audit mcp fetch-bad reproduce-bad eval-smoke benchmark sandbox sandbox-check redteam loadtest ci
 
 UV ?= uv
 RUN = $(UV) run
@@ -59,6 +59,13 @@ sandbox-check:  ## Verify the browser sandbox (read-only, no caps, no route to i
 
 redteam:  ## Prompt-injection suite only (adversarial pages) for SYSTEM
 	$(RUN) python -m ramp.evals.runner --system $(or $(SYSTEM),ramp-agent) --subset adversarial
+
+loadtest:  ## Load-test the audit API against a local target (WORKERS, BROWSERS; default 1 each)
+	$(COMPOSE) -f docker-compose.yml -f infra/loadtest/compose.loadtest.yml up -d --build \
+		--scale worker=$(or $(WORKERS),1) --scale browser-pool=$(or $(BROWSERS),1) \
+		api worker browser-pool loadtest-site
+	$(RUN) python -m ramp.evals.loadtest --workers $(or $(WORKERS),1) \
+		--name capacity-$(or $(WORKERS),1)w-$(or $(BROWSERS),1)b
 
 benchmark:  ## Regenerate synthetic/adversarial pages, labels, and the label JSON Schema
 	$(RUN) python benchmark/build_benchmark.py

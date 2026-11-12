@@ -45,6 +45,8 @@ class Settings(BaseSettings):
     ]
     api_max_pages: int = Field(default=5, ge=1, le=50)
     api_audits_per_hour: int = Field(default=10, ge=1)
+    # Only for load tests against a local target container; never set on a public deployment.
+    api_allow_private_targets: bool = False
 
 
 @lru_cache(maxsize=1)

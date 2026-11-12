@@ -92,7 +92,7 @@ def create_app(
         url = str(body.url)
         if body.max_pages > settings.api_max_pages:
             raise HTTPException(422, f"max_pages is limited to {settings.api_max_pages}")
-        if await is_private(url):
+        if not settings.api_allow_private_targets and await is_private(url):
             raise HTTPException(422, "only public http(s) addresses can be audited")
         client = request.client.host if request.client else "unknown"
         if not await store(request).allow(client, settings.api_audits_per_hour):

@@ -1,0 +1,26 @@
+{
+  "run_at": "2026-11-12T19:16:56+00:00",
+  "api": "http://127.0.0.1:8088",
+  "workers": 2,
+  "jobs_per_worker": 2,
+  "audits_per_client": 4,
+  "sites": 1,
+  "levels": [
+    {
+      "concurrency": 8,
+      "audits_completed": 32,
+      "errors": 0,
+      "error_rate": 0.0,
+      "throughput_per_min": 60.27,
+      "submit_p50_s": 0.003,
+      "submit_p95_s": 0.02,
+      "status_p50_s": 0.004,
+      "status_p95_s": 0.008,
+      "end_to_end_p50_s": 6.172,
+      "end_to_end_p95_s": 13.846,
+      "queue_wait_p50_s": 4.089,
+      "queue_wait_p95_s": 4.374,
+      "error_examples": []
+    }
+  ]
+}

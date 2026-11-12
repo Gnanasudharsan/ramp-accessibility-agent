@@ -1,0 +1,19 @@
+# Load-test overlay: `docker compose -f docker-compose.yml -f infra/loadtest/compose.loadtest.yml`.
+# The target is a local static copy of the benchmark pages, so the test never sends load to
+# anyone else's site. Private targets and a high rate limit are enabled here only.
+services:
+  api:
+    environment:
+      RAMP_API_ALLOW_PRIVATE_TARGETS: "true"
+      RAMP_API_AUDITS_PER_HOUR: "100000"
+  loadtest-site:
+    image: nginx:1.29-alpine
+    volumes:
+      - ./benchmark/site:/usr/share/nginx/html:ro  # relative to the project root
+    # Eight hostnames for one container: the capacity scenario spreads clients across "sites"
+    # so the per-site politeness limit (1 request/s) is not the bottleneck being measured.
+    networks:
+      egress: { aliases: [site-1, site-2, site-3, site-4, site-5, site-6, site-7, site-8] }
+      default: { aliases: [site-1, site-2, site-3, site-4, site-5, site-6, site-7, site-8] }
+    read_only: true
+    tmpfs: [/var/cache/nginx, /var/run, /tmp]
