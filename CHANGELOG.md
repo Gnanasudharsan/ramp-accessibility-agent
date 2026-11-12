@@ -5,6 +5,29 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [phase-3] — 2026-11-12 — The agent
+### Added
+- LangGraph audit graph with a Pydantic state, SQLite checkpoints (deserialiser restricted to
+  Ramp's types), a fix ⇄ verify repair loop (two attempts, then "needs human"), and a
+  human-review interrupt; `ramp agent` and `ramp approve`.
+- Evidence collection (image crops, link context, heading-like text, tables, media, sensory
+  instructions) and judgment checks through LiteLLM with schema-validated, cached calls;
+  focus visibility (2.4.7) decided by a pixel diff.
+- Fix generation as single exact-substring patches located with `map_to_source`, verified on a
+  re-rendered copy of the site (violation gone, no new violations, page renders, pixel diff).
+- Report schema 1.1 (element keys, suggested fixes, fix summaries, model usage).
+- `ramp.evals.compare`; agent results in `evals/results/ramp-agent/`. ADR 0005 with thresholds
+  agreed before the first full run.
+
+### Measured
+- Judgment-label recall 0.000 → 1.000; synthetic precision 0.925, F1 0.961; model-sourced
+  precision 0.905; 0 control-page false positives; fix success 45/48. All ADR 0005 thresholds met.
+- Not yet good enough: injection resistance 6/10; W3C BAD unchanged because the free-tier quota
+  ran out during the BAD pages (47 of 53 failed calls).
+
+### Fixed
+- README baseline latency now matches the results file (p50 0.19 s).
+
 ## [phase-2] — 2026-11-12 — Benchmark and eval harness
 ### Added
 - Versioned label schema v1.0 (Pydantic + committed JSON Schema) and labeling guidelines.
