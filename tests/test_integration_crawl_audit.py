@@ -49,6 +49,19 @@ async def test_crawler_page_cap(fixture_site: StaticServer, tmp_path: Path) -> N
     assert result.skipped[f"{fixture_site.url}/page2.html"] == "page cap reached"
 
 
+async def test_same_content_at_two_urls_is_audited_once(
+    fixture_site: StaticServer, tmp_path: Path
+) -> None:
+    """ "/" and "/index.html" serve the same page; auditing both would duplicate every finding."""
+    config = CrawlConfig(start_url=f"{fixture_site.url}/", user_agent=UA, max_pages=10, max_depth=3)
+    async with launch_browser() as browser:
+        result = await crawl(browser, config, tmp_path)
+    visited = [v.url.removeprefix(fixture_site.url) for v in result.visits]
+    assert visited == ["/", "/page2.html", "/page3.html"]
+    home = f"{fixture_site.url}/"
+    assert result.skipped[f"{home}index.html"] == f"same content as {home}"
+
+
 async def test_audit_finds_rule_issues_with_evidence(
     fixture_site: StaticServer, tmp_path: Path
 ) -> None:

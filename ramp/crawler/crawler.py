@@ -13,6 +13,7 @@ Guarantees (see CLAUDE.md, ethics section):
 
 from __future__ import annotations
 
+import hashlib
 import logging
 from collections import deque
 from collections.abc import Awaitable, Callable
@@ -167,6 +168,7 @@ async def crawl(
 
     queue: deque[tuple[str, int]] = deque([(start, 0)])
     seen: set[str] = {start}
+    contents: dict[str, str] = {}  # sha256 of rendered HTML -> first URL that served it
     try:
         while queue and len(result.visits) < config.max_pages:
             url, depth = queue.popleft()
@@ -184,12 +186,19 @@ async def crawl(
                 if response is not None and "html" not in content_type:
                     result.skipped[url] = f"not HTML ({content_type or 'unknown'})"
                     continue
+                html = await page.content()
+                digest = hashlib.sha256(html.encode()).hexdigest()
+                if digest in contents:
+                    # e.g. "/" and "/index.html": auditing both would duplicate every finding.
+                    result.skipped[url] = f"same content as {contents[digest]}"
+                    continue
+                contents[digest] = url
                 visit.title = await page.title()
                 slug = _slug(len(result.visits))
                 shot = out_dir / "pages" / f"{slug}.png"
                 dom = out_dir / "pages" / f"{slug}.html"
                 await page.screenshot(path=str(shot), full_page=True)
-                dom.write_text(await page.content(), encoding="utf-8")
+                dom.write_text(html, encoding="utf-8")
                 visit.screenshot = str(shot.relative_to(out_dir))
                 visit.dom_snapshot = str(dom.relative_to(out_dir))
                 if on_page is not None:
