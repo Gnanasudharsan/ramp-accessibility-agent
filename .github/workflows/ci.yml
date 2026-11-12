@@ -29,3 +29,35 @@ jobs:
         run: uv run mypy
       - name: Pytest
         run: uv run pytest
+
+  integration:
+    name: browser tests + axe reproduction
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: true
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: benchmark/reference/package-lock.json
+      - name: Install
+        run: |
+          uv sync --all-groups --frozen
+          uv run playwright install --with-deps chromium
+          cd benchmark/reference && npm ci && npx playwright install chromium
+      - name: Cache W3C BAD pages
+        id: bad-cache
+        uses: actions/cache@v6
+        with:
+          path: benchmark/bad/site
+          key: w3c-bad-${{ hashFiles('benchmark/bad/fetch_bad.py') }}
+      - name: Fetch W3C BAD pages (cache miss only)
+        if: steps.bad-cache.outputs.cache-hit != 'true'
+        run: uv run python benchmark/bad/fetch_bad.py
+      - name: Integration tests (crawler, audit, MCP over stdio)
+        run: uv run pytest -m integration
+      - name: Reproduce axe-core exactly on W3C BAD
+        run: uv run python -m ramp.evals.reproduce_bad
