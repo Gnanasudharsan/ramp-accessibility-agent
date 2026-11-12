@@ -7,6 +7,8 @@ Guarantees (see CLAUDE.md, ethics section):
   submitted and no state-changing call can be made, even by page scripts. Downloads and service
   workers are disabled.
 - Same-origin only, with depth and page caps.
+- No requests to private, loopback, link-local, or unresolvable hosts (SSRF), unless the audit
+  itself targets such a host (local development).
 """
 
 from __future__ import annotations
@@ -22,6 +24,7 @@ from playwright.async_api import Browser, BrowserContext, Page, Route
 
 from ramp.crawler.politeness import RateLimiter, RobotsPolicy
 from ramp.crawler.urls import normalize, origin_of, same_origin
+from ramp.security.netpolicy import url_is_private
 
 log = logging.getLogger(__name__)
 
@@ -38,6 +41,7 @@ class CrawlConfig:
     min_interval: float = 1.0
     viewport: tuple[int, int] = (1280, 900)
     offline: bool = False  # block every request outside the start URL's origin
+    allow_private: bool | None = None  # None: allowed only when the start URL itself is private
 
 
 @dataclass
@@ -64,11 +68,20 @@ class CrawlResult:
 PageHook = Callable[[Page, PageVisit], Awaitable[None]]
 
 
-async def _guard(route: Route, counter: list[int], allowed_origins: frozenset[str] | None) -> None:
-    """Abort writes always; abort off-origin requests too when ``allowed_origins`` is set."""
+async def _guard(
+    route: Route,
+    counter: list[int],
+    allowed_origins: frozenset[str] | None,
+    allow_private: bool,
+) -> None:
+    """Abort writes always; abort private-network targets unless allowed; abort off-origin
+    requests when ``allowed_origins`` is set."""
     request = route.request
     off_origin = allowed_origins is not None and origin_of(request.url) not in allowed_origins
-    if request.method.upper() in READ_ONLY_METHODS and not off_origin:
+    private = (
+        not allow_private and request.url.startswith("http") and (await url_is_private(request.url))
+    )
+    if request.method.upper() in READ_ONLY_METHODS and not off_origin and not private:
         await route.continue_()
     else:
         counter[0] += 1
@@ -81,6 +94,7 @@ async def new_readonly_context(
     viewport: tuple[int, int],
     counter: list[int],
     allowed_origins: frozenset[str] | None = None,
+    allow_private: bool = False,
 ) -> BrowserContext:
     """A browser context that can only read. ``allowed_origins`` additionally makes it offline
     except for those origins (used by evals for determinism)."""
@@ -93,7 +107,7 @@ async def new_readonly_context(
     )
 
     async def handler(route: Route) -> None:
-        await _guard(route, counter, allowed_origins)
+        await _guard(route, counter, allowed_origins, allow_private)
 
     await context.route("**/*", handler)
     return context
@@ -138,8 +152,17 @@ async def crawl(
     result = CrawlResult()
     blocked = [0]
     allowed = frozenset({origin_of(start)}) if config.offline else None
+    # Auditing a local site (development) may load local resources; a public site may not.
+    allow_private = (
+        config.allow_private if config.allow_private is not None else await url_is_private(start)
+    )
     context = await new_readonly_context(
-        browser, config.user_agent, config.viewport, blocked, allowed_origins=allowed
+        browser,
+        config.user_agent,
+        config.viewport,
+        blocked,
+        allowed_origins=allowed,
+        allow_private=allow_private,
     )
 
     queue: deque[tuple[str, int]] = deque([(start, 0)])

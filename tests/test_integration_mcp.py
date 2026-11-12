@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -33,6 +34,7 @@ async def test_tools_end_to_end(
     fixture_site: StaticServer, fixture_repo: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setenv("RAMP_MCP_SOURCE_ROOTS", str(fixture_repo))
+    monkeypatch.setenv("RAMP_MCP_ALLOW_PRIVATE", "1")
     url = f"{fixture_site.url}/index.html"
     async with Client(mcp) as client:
         axe = _structured(await client.call_tool("run_axe", {"url": url}))
@@ -71,9 +73,23 @@ async def test_tools_end_to_end(
     assert robots.is_error
 
 
+async def test_server_refuses_private_addresses_by_default(
+    fixture_site: StaticServer, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("RAMP_MCP_ALLOW_PRIVATE", raising=False)
+    async with Client(mcp) as client:
+        result = await client.call_tool("run_axe", {"url": f"{fixture_site.url}/index.html"})
+        metadata = await client.call_tool("run_axe", {"url": "http://169.254.169.254/latest/"})
+    assert result.is_error
+    assert metadata.is_error
+
+
 async def test_server_works_over_stdio(fixture_site: StaticServer) -> None:
     params = StdioServerParameters(
-        command=sys.executable, args=["-m", "ramp.mcp_server.server"], cwd=str(Path.cwd())
+        command=sys.executable,
+        args=["-m", "ramp.mcp_server.server"],
+        cwd=str(Path.cwd()),
+        env={**os.environ, "RAMP_MCP_ALLOW_PRIVATE": "1"},
     )
     async with Client(params) as client:
         result = await client.call_tool("run_axe", {"url": f"{fixture_site.url}/page3.html"})

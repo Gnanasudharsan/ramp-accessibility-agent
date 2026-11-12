@@ -8,7 +8,8 @@ Tools
 
 Safety
 - Pages load in a read-only browser context (non-GET requests aborted), honouring robots.txt and
-  at most one navigation per second per host.
+  at most one navigation per second per host. Private and internal addresses are refused (SSRF)
+  unless ``RAMP_MCP_ALLOW_PRIVATE=1`` (local development and tests).
 - ``map_to_source`` only reads under allowlisted roots (``RAMP_MCP_SOURCE_ROOTS``, default: the
   working directory), so a client cannot point it at arbitrary host paths.
 - Everything taken from a page (HTML, names, text) is untrusted data. Results return it in data
@@ -40,6 +41,7 @@ from ramp.config import get_settings
 from ramp.crawler.crawler import NAV_TIMEOUT_MS, new_readonly_context
 from ramp.crawler.politeness import RateLimiter, RobotsPolicy
 from ramp.crawler.urls import normalize, origin_of
+from ramp.security.netpolicy import url_is_private
 
 READ_ONLY = ToolAnnotations(readOnlyHint=True, destructiveHint=False, openWorldHint=True)
 LOCAL_READ_ONLY = ToolAnnotations(readOnlyHint=True, destructiveHint=False, openWorldHint=False)
@@ -80,12 +82,15 @@ class _BrowserHub:
         target = normalize(url)
         if target is None:
             raise ToolError(f"only http(s) page URLs are supported: {url!r}")
+        private = await url_is_private(target)
+        if private and os.environ.get("RAMP_MCP_ALLOW_PRIVATE") != "1":
+            raise ToolError("refusing to load a private or internal address (SSRF policy)")
         if not (await self.robots(target)).allowed(target):
             raise ToolError(f"robots.txt disallows {target}")
         await self.limiter.wait(target)
         settings = get_settings()
         context = await new_readonly_context(
-            await self.browser(), settings.user_agent, (1280, 900), [0]
+            await self.browser(), settings.user_agent, (1280, 900), [0], allow_private=private
         )
         try:
             page = await context.new_page()
@@ -257,7 +262,22 @@ async def map_to_source(
 
 
 def main() -> None:
-    mcp.run("stdio")
+    """stdio by default; ``RAMP_MCP_TRANSPORT=streamable-http`` inside the browser sandbox."""
+    if os.environ.get("RAMP_MCP_TRANSPORT") == "streamable-http":
+        from mcp.server.transport_security import TransportSecuritySettings
+
+        hosts = [h for h in os.environ.get("RAMP_MCP_ALLOWED_HOSTS", "").split(",") if h]
+        mcp.run(
+            "streamable-http",
+            host=os.environ.get("RAMP_MCP_HOST", "127.0.0.1"),
+            port=int(os.environ.get("RAMP_MCP_PORT", "8765")),
+            transport_security=TransportSecuritySettings(
+                enable_dns_rebinding_protection=True,
+                allowed_hosts=hosts or ["127.0.0.1:*", "localhost:*"],
+            ),
+        )
+    else:
+        mcp.run("stdio")
 
 
 if __name__ == "__main__":

@@ -65,3 +65,16 @@ async def test_audit_finds_rule_issues_with_evidence(
     assert report.coverage.axe_version == "4.14.0"
     assert "1.4.3" in report.coverage.criteria_checked
     assert "1.3.3" in report.coverage.criteria_not_checked  # Sensory Characteristics: manual
+
+
+async def test_private_network_is_refused_when_not_explicitly_allowed(
+    fixture_site: StaticServer, tmp_path: Path
+) -> None:
+    """SSRF: with private targets disallowed, the browser cannot load a loopback address."""
+    config = CrawlConfig(
+        start_url=f"{fixture_site.url}/index.html", user_agent=UA, max_pages=1, allow_private=False
+    )
+    async with launch_browser() as browser:
+        result = await crawl(browser, config, tmp_path)
+    assert result.visits[0].error is not None
+    assert fixture_site.requests == [("GET", "/robots.txt")]  # only the robots.txt fetch (httpx)
