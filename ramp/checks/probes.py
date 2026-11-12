@@ -15,7 +15,7 @@ from ramp.checks.contrast import contrast_ratio, is_large_text, parse_css_color,
 from ramp.report.schema import BoundingBox
 
 # Shared JS helper: a short, unique CSS path for an element.
-_CSS_PATH_JS = """
+CSS_PATH_JS = """
 function cssPath(el) {
   if (!(el instanceof Element)) return '';
   if (el.id && document.querySelectorAll('#' + CSS.escape(el.id)).length === 1)
@@ -141,7 +141,7 @@ async def focus_order(page: Page, max_steps: int = 60) -> FocusOrderResult:
     """Press Tab repeatedly and record each focused element (SC 2.4.3, 2.4.7, 2.1.2)."""
     probe = (
         "() => {"
-        + _CSS_PATH_JS
+        + CSS_PATH_JS
         + """
         {
           const el = document.activeElement;
