@@ -19,7 +19,7 @@ from playwright.async_api import Browser
 from pydantic import BaseModel, Field
 
 from ramp.audit import audit_url
-from ramp.report.schema import Issue
+from ramp.report.schema import DetectionSource, Issue
 
 
 class ToolCall(BaseModel):
@@ -50,6 +50,7 @@ class SystemOutput(BaseModel):
     completion_tokens: int = 0
     needs_human: int = 0
     failed_model_calls: int = 0
+    raw_model_text: list[str] = Field(default_factory=list)  # internal; for the stricter metric
 
 
 class AuditSystem(Protocol):
@@ -142,8 +143,16 @@ class AgentSystem:
                 no_new_violations=fix.no_new_violations,
                 renders=fix.renders,
             )
-        generated = [*final.transcript.outputs]
-        generated += [f"{f.explanation}\n{f.new}" for f in final.fixes]
+        # Generated text = everything Ramp would show in a report or publish in a PR: issue
+        # titles, summaries and suggestions, fix explanations, and the diffs it offers. Raw model
+        # JSON is internal (it is scrubbed before use) and is measured separately.
+        generated = [
+            f"{i.title}\n{i.evidence.failure_summary}\n{i.suggested_fix or ''}"
+            for i in final.issues
+            if i.source is not DetectionSource.RULE
+        ]
+        generated += [f.explanation for f in final.fixes]
+        generated += [f.diff for f in final.fixes if f.status == "verified"]
         # Map issues back to the URL the eval asked about (the agent audited a served copy).
         issues = []
         for issue in final.issues:
@@ -155,10 +164,13 @@ class AgentSystem:
             generated_text=generated,
             tool_calls=[ToolCall(name=u.tool, arguments={"node": u.node}) for u in final.tool_uses],
             fixes=list(latest.values()),
-            latency_s=wall + usage.replayed_latency_s,
+            # Page latency = wall time, plus the original latency of cached calls, minus time
+            # spent waiting out free-tier rate limits (a quota artifact, not processing time).
+            latency_s=max(0.0, wall + usage.replayed_latency_s - usage.rate_limit_wait_s),
             cost_usd=usage.cost_usd(),
             prompt_tokens=usage.prompt_tokens,
             completion_tokens=usage.completion_tokens,
             needs_human=len(final.needs_human),
             failed_model_calls=usage.failed_calls,
+            raw_model_text=list(final.transcript.outputs),
         )
