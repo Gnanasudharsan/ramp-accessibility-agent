@@ -65,9 +65,11 @@ services:
     environment:
       <<: *ramp-env
       RAMP_MCP_URL: http://browser:8765/mcp
+      RAMP_BROWSER_WS: ws://browser-pool:3000/
     networks: [internal, mcp, default]
     depends_on:
       redis: { condition: service_healthy }
+      browser-pool: { condition: service_started }
 
   # Sandboxed browser (ramp-a11y-mcp over streamable HTTP). No secrets, no host mounts,
   # read-only root filesystem, all capabilities dropped, bounded CPU/memory/PIDs.
@@ -78,6 +80,24 @@ services:
       RAMP_MCP_HOST: 0.0.0.0
       RAMP_MCP_PORT: "8765"
       RAMP_MCP_ALLOWED_HOSTS: browser:8765
+    networks: [mcp, egress]
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=512m
+      - /dev/shm:rw,noexec,nosuid,size=256m
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 256
+    mem_limit: 1g
+    cpus: 1.0
+    ipc: private
+    init: true
+
+  # Playwright browser server for the worker's crawls: same image and hardening as `browser`.
+  # The worker drives pages over the `mcp` network; page traffic leaves only via `egress`.
+  browser-pool:
+    build: { context: ., dockerfile: infra/docker/browser.Dockerfile }
+    command: ["playwright", "run-server", "--host", "0.0.0.0", "--port", "3000", "--max-clients", "4"]
     networks: [mcp, egress]
     read_only: true
     tmpfs:
