@@ -1,0 +1,14 @@
+{
+  "root_fs_writable": false,
+  "tmp_writable": true,
+  "uid": 10002,
+  "effective_capabilities": "0000000000000000",
+  "internal_reachable": {
+    "redis:6379": false,
+    "langfuse-web:3000": false,
+    "mlflow:5000": false,
+    "postgres:5432": false
+  },
+  "secrets_in_env": [],
+  "ok": true
+}

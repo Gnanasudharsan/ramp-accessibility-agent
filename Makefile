@@ -1,5 +1,5 @@
 # Ramp developer entry points. `make help` lists targets.
-.PHONY: help setup browsers up up-core down logs test test-all lint format eval audit mcp fetch-bad reproduce-bad eval-smoke benchmark ci
+.PHONY: help setup browsers up up-core down logs test test-all lint format eval audit mcp fetch-bad reproduce-bad eval-smoke benchmark sandbox sandbox-check redteam ci
 
 UV ?= uv
 RUN = $(UV) run
@@ -49,6 +49,16 @@ eval:  ## Run the full benchmark for SYSTEM (default axe-baseline) into evals/re
 
 eval-smoke:  ## Fast benchmark subset (what CI runs)
 	$(RUN) python -m ramp.evals.runner --system $(or $(SYSTEM),axe-baseline) --subset smoke
+
+sandbox:  ## Build and start the sandboxed browser (ramp-a11y-mcp over HTTP, isolated networks)
+	$(COMPOSE) up -d --build browser
+
+sandbox-check:  ## Verify the browser sandbox (read-only, no caps, no route to internal services)
+	$(COMPOSE) up -d browser
+	$(COMPOSE) exec -T browser python -m ramp.security.sandbox_check
+
+redteam:  ## Prompt-injection suite only (adversarial pages) for SYSTEM
+	$(RUN) python -m ramp.evals.runner --system $(or $(SYSTEM),ramp-agent) --subset adversarial
 
 benchmark:  ## Regenerate synthetic/adversarial pages, labels, and the label JSON Schema
 	$(RUN) python benchmark/build_benchmark.py

@@ -1,5 +1,11 @@
 # Local stack. `make up` starts everything; `make up-core` skips the observability profile.
 # Secrets come from .env (see .env.example). Data stores bind to 127.0.0.1 only.
+#
+# Networks (ADR 0006):
+#   internal  api, worker, redis, MLflow, Langfuse. No internet route is needed.
+#   mcp       worker <-> browser only (the MCP endpoint).
+#   egress    browser only: the one container that talks to audited websites.
+# The browser is never on `internal`, so a hostile page cannot reach Redis, Langfuse, or MLflow.
 
 x-ramp-env: &ramp-env
   RAMP_REDIS_URL: redis://:${REDIS_AUTH:-change-me-redis}@redis:6379/1
@@ -43,6 +49,7 @@ services:
   api:
     build: { context: ., dockerfile: infra/docker/Dockerfile }
     environment: *ramp-env
+    networks: [internal, default]
     ports: ["127.0.0.1:${RAMP_API_PORT:-8088}:8000"]
     depends_on:
       redis: { condition: service_healthy }
@@ -55,12 +62,38 @@ services:
   worker:
     build: { context: ., dockerfile: infra/docker/Dockerfile }
     command: ["arq", "ramp.api.worker.WorkerSettings"]
-    environment: *ramp-env
+    environment:
+      <<: *ramp-env
+      RAMP_MCP_URL: http://browser:8765/mcp
+    networks: [internal, mcp, default]
     depends_on:
       redis: { condition: service_healthy }
 
+  # Sandboxed browser (ramp-a11y-mcp over streamable HTTP). No secrets, no host mounts,
+  # read-only root filesystem, all capabilities dropped, bounded CPU/memory/PIDs.
+  browser:
+    build: { context: ., dockerfile: infra/docker/browser.Dockerfile }
+    environment:
+      RAMP_MCP_TRANSPORT: streamable-http
+      RAMP_MCP_HOST: 0.0.0.0
+      RAMP_MCP_PORT: "8765"
+      RAMP_MCP_ALLOWED_HOSTS: browser:8765
+    networks: [mcp, egress]
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=512m
+      - /dev/shm:rw,noexec,nosuid,size=256m
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 256
+    mem_limit: 1g
+    cpus: 1.0
+    ipc: private
+    init: true
+
   redis:
     image: redis:7.4-alpine
+    networks: [internal, default]  # default only so the host port can be published
     command: ["redis-server", "--requirepass", "${REDIS_AUTH:-change-me-redis}", "--maxmemory-policy", "noeviction"]
     ports: ["127.0.0.1:6379:6379"]
     volumes: [redis_data:/data]
@@ -72,6 +105,7 @@ services:
 
   mlflow:
     image: ghcr.io/mlflow/mlflow:v3.18.0
+    networks: [internal, default]
     command: >
       mlflow server --host 0.0.0.0 --port 5000
       --backend-store-uri sqlite:////mlflow/mlflow.db
@@ -83,6 +117,7 @@ services:
   # ---- Observability profile: self-hosted Langfuse v4 -------------------------------------
   langfuse-web:
     profiles: [observability]
+    networks: [internal, default]
     image: docker.langfuse.com/langfuse/langfuse:4
     depends_on: &langfuse-deps
       postgres: { condition: service_healthy }
@@ -98,12 +133,14 @@ services:
 
   langfuse-worker:
     profiles: [observability]
+    networks: [internal]
     image: docker.langfuse.com/langfuse/langfuse-worker:4
     depends_on: *langfuse-deps
     environment: *langfuse-env
 
   postgres:
     profiles: [observability]
+    networks: [internal]
     image: postgres:17
     environment:
       POSTGRES_USER: postgres
@@ -118,6 +155,7 @@ services:
 
   clickhouse:
     profiles: [observability]
+    networks: [internal]
     image: clickhouse/clickhouse-server:26.3.62.3
     user: "101:101"
     environment:
@@ -135,6 +173,7 @@ services:
 
   minio:
     profiles: [observability]
+    networks: [internal, default]
     image: cgr.dev/chainguard/minio
     entrypoint: sh
     command: -c 'mkdir -p /data/langfuse && minio server --address ":9000" --console-address ":9001" /data'
@@ -148,6 +187,12 @@ services:
       interval: 2s
       timeout: 5s
       retries: 10
+
+networks:
+  default: {}
+  internal: { internal: true }
+  mcp: { internal: true }
+  egress: {}
 
 volumes:
   redis_data:
