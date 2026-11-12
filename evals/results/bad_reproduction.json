@@ -1,0 +1,78 @@
+{
+  "axe_version": "4.14.0",
+  "exact_match": true,
+  "pages": [
+    {
+      "page": "before/home",
+      "reference_findings": 69,
+      "ramp_findings": 69,
+      "rules": 8,
+      "missing": [],
+      "extra": [],
+      "exact_match": true
+    },
+    {
+      "page": "before/news",
+      "reference_findings": 54,
+      "ramp_findings": 54,
+      "rules": 7,
+      "missing": [],
+      "extra": [],
+      "exact_match": true
+    },
+    {
+      "page": "before/tickets",
+      "reference_findings": 50,
+      "ramp_findings": 50,
+      "rules": 9,
+      "missing": [],
+      "extra": [],
+      "exact_match": true
+    },
+    {
+      "page": "before/survey",
+      "reference_findings": 65,
+      "ramp_findings": 65,
+      "rules": 8,
+      "missing": [],
+      "extra": [],
+      "exact_match": true
+    },
+    {
+      "page": "after/home",
+      "reference_findings": 17,
+      "ramp_findings": 17,
+      "rules": 3,
+      "missing": [],
+      "extra": [],
+      "exact_match": true
+    },
+    {
+      "page": "after/news",
+      "reference_findings": 17,
+      "ramp_findings": 17,
+      "rules": 3,
+      "missing": [],
+      "extra": [],
+      "exact_match": true
+    },
+    {
+      "page": "after/tickets",
+      "reference_findings": 17,
+      "ramp_findings": 17,
+      "rules": 3,
+      "missing": [],
+      "extra": [],
+      "exact_match": true
+    },
+    {
+      "page": "after/survey",
+      "reference_findings": 28,
+      "ramp_findings": 28,
+      "rules": 5,
+      "missing": [],
+      "extra": [],
+      "exact_match": true
+    }
+  ]
+}
