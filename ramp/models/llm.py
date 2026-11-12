@@ -50,7 +50,11 @@ _locks: dict[str, asyncio.Lock] = defaultdict(asyncio.Lock)
 
 
 class LLMError(RuntimeError):
-    pass
+    """A model call that could not produce a valid answer.
+
+    Messages end up in reports and pull requests, so they name the model and what went wrong but
+    never include provider error bodies (those can carry account identifiers); the details are
+    logged locally instead."""
 
 
 class Usage(BaseModel):
@@ -163,13 +167,15 @@ class StructuredLLM:
                         response_format=response_format,
                     )
             except BadRequestError as exc:
-                raise LLMError(f"{self.model} rejected the request: {str(exc)[:300]}") from exc
+                log.warning("%s rejected the request: %s", self.model, str(exc)[:300])
+                raise LLMError(f"{self.model} rejected the request") from exc
             except RateLimitError as exc:
                 if _is_daily_limit(exc):
                     # Per-day quotas do not clear in seconds; retrying only burns wall time.
                     self.transcript.usage.failed_calls += 1
                     self.transcript.usage.daily_limit_hits += 1
-                    raise LLMError(f"{self.model} hit its daily quota: {str(exc)[:200]}") from exc
+                    log.warning("%s daily quota: %s", self.model, str(exc)[:300])
+                    raise LLMError(f"{self.model} hit its daily quota") from exc
                 wait = _retry_after(exc) or min(60.0, 4.0 * 2**attempt)
                 last = f"rate limited: {str(exc)[:300]}"
                 log.info("rate limited on %s, waiting %.1fs (%s)", self.model, wait, last)
@@ -192,7 +198,7 @@ class StructuredLLM:
                 await asyncio.sleep(wait)
         self.transcript.usage.failed_calls += 1
         log.warning("%s gave up after retries; last error: %s", self.model, last)
-        raise LLMError(f"{self.model} did not answer after retries ({last[:120]})")
+        raise LLMError(f"{self.model} did not answer after retries")
 
     async def complete(
         self,

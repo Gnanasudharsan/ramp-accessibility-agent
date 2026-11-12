@@ -93,3 +93,23 @@ async def test_gives_up_after_retries(monkeypatch: pytest.MonkeyPatch, tmp_path:
         await StructuredLLM("fake/model", Transcript(), cache_dir=tmp_path).complete(
             system="s", user="u", schema=Answer
         )
+
+
+async def test_quota_errors_never_carry_provider_details(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import litellm
+
+    async def refuse(**_: object) -> None:
+        raise litellm.RateLimitError(
+            "Rate limit reached in organization org_SECRET123 on tokens per day (TPD)",
+            llm_provider="groq",
+            model="m",
+        )
+
+    monkeypatch.setattr(litellm, "acompletion", refuse)
+    llm = StructuredLLM("groq/m", Transcript(), cache_dir=tmp_path)
+    with pytest.raises(LLMError) as info:
+        await llm.complete(system="s", user="u", schema=Answer)
+    assert "daily quota" in str(info.value)
+    assert "org_" not in str(info.value)
