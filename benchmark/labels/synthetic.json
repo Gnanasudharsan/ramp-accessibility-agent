@@ -1,0 +1,689 @@
+{
+  "schema_version": "1.0",
+  "pages": [
+    {
+      "page": "site/synthetic/s01-img-no-alt.html",
+      "set": "synthetic",
+      "title": "Our reading room",
+      "labels": [
+        {
+          "id": "s01-1",
+          "criterion": "1.1.1",
+          "also": [],
+          "selector": "#reading-room",
+          "detectable_by": "rule",
+          "description": "Content image has no alt attribute.",
+          "fix_hint": "Add alt=\"Reading room with tall oak shelves and long study tables\"."
+        }
+      ],
+      "injection": null,
+      "smoke": true
+    },
+    {
+      "page": "site/synthetic/s02-input-no-label.html",
+      "set": "synthetic",
+      "title": "Search the catalog",
+      "labels": [
+        {
+          "id": "s02-1",
+          "criterion": "4.1.2",
+          "also": [
+            "1.3.1",
+            "3.3.2"
+          ],
+          "selector": "#q",
+          "detectable_by": "rule",
+          "description": "Search field has no accessible name.",
+          "fix_hint": "Add <label for=\"q\">Search the catalog</label>."
+        }
+      ],
+      "injection": null,
+      "smoke": true
+    },
+    {
+      "page": "site/synthetic/s03-low-contrast.html",
+      "set": "synthetic",
+      "title": "Opening hours",
+      "labels": [
+        {
+          "id": "s03-1",
+          "criterion": "1.4.3",
+          "also": [],
+          "selector": "#holiday-note",
+          "detectable_by": "rule",
+          "description": "Grey text on white is about 2.8:1, below 4.5:1.",
+          "fix_hint": "Use #525B6B or darker."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/s04-empty-icon-link.html",
+      "set": "synthetic",
+      "title": "Follow us",
+      "labels": [
+        {
+          "id": "s04-1",
+          "criterion": "2.4.4",
+          "also": [
+            "4.1.2"
+          ],
+          "selector": "#social",
+          "detectable_by": "rule",
+          "description": "Icon-only link has no accessible name.",
+          "fix_hint": "Add aria-label=\"Brightwater Library on Social\"."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/s05-empty-button.html",
+      "set": "synthetic",
+      "title": "Mobile menu",
+      "labels": [
+        {
+          "id": "s05-1",
+          "criterion": "4.1.2",
+          "also": [],
+          "selector": "#menu-toggle",
+          "detectable_by": "rule",
+          "description": "Button has no accessible name.",
+          "fix_hint": "Add aria-label=\"Menu\" or visible text."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/s06-missing-lang.html",
+      "set": "synthetic",
+      "title": "About the library",
+      "labels": [
+        {
+          "id": "s06-1",
+          "criterion": "3.1.1",
+          "also": [],
+          "selector": "html",
+          "detectable_by": "rule",
+          "description": "Page language is not declared.",
+          "fix_hint": "Add lang=\"en\" to <html>."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/s07-missing-title.html",
+      "set": "synthetic",
+      "title": "Library card",
+      "labels": [
+        {
+          "id": "s07-1",
+          "criterion": "2.4.2",
+          "also": [],
+          "selector": "html",
+          "detectable_by": "rule",
+          "description": "Page has no <title>.",
+          "fix_hint": "Add a descriptive <title>."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/s08-aria-hidden-focus.html",
+      "set": "synthetic",
+      "title": "Membership offer",
+      "labels": [
+        {
+          "id": "s08-1",
+          "criterion": "4.1.2",
+          "also": [
+            "1.3.1"
+          ],
+          "selector": "#promo",
+          "detectable_by": "rule",
+          "description": "aria-hidden content contains a focusable link.",
+          "fix_hint": "Remove aria-hidden or make the link unfocusable."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/s09-invalid-role.html",
+      "set": "synthetic",
+      "title": "Renew your books",
+      "labels": [
+        {
+          "id": "s09-1",
+          "criterion": "4.1.2",
+          "also": [
+            "1.3.1"
+          ],
+          "selector": "#renew",
+          "detectable_by": "rule",
+          "description": "Misspelled ARIA role 'buton' is invalid.",
+          "fix_hint": "Use a <button> element."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/s10-select-no-label.html",
+      "set": "synthetic",
+      "title": "Choose a branch",
+      "labels": [
+        {
+          "id": "s10-1",
+          "criterion": "4.1.2",
+          "also": [
+            "1.3.1",
+            "3.3.2"
+          ],
+          "selector": "#branch",
+          "detectable_by": "rule",
+          "description": "Select has no accessible name.",
+          "fix_hint": "Add <label for=\"branch\">Branch</label>."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/s11-iframe-no-title.html",
+      "set": "synthetic",
+      "title": "Find us",
+      "labels": [
+        {
+          "id": "s11-1",
+          "criterion": "4.1.2",
+          "also": [],
+          "selector": "#map",
+          "detectable_by": "rule",
+          "description": "iframe has no title.",
+          "fix_hint": "Add title=\"Map of the library location\"."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/s12-viewport-zoom.html",
+      "set": "synthetic",
+      "title": "Large print collection",
+      "labels": [
+        {
+          "id": "s12-1",
+          "criterion": "1.4.4",
+          "also": [],
+          "selector": "meta[name=\"viewport\"]",
+          "detectable_by": "rule",
+          "description": "Viewport disables zoom.",
+          "fix_hint": "Remove user-scalable=no and maximum-scale=1."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/s13-invalid-list.html",
+      "set": "synthetic",
+      "title": "Services",
+      "labels": [
+        {
+          "id": "s13-1",
+          "criterion": "1.3.1",
+          "also": [],
+          "selector": "#services",
+          "detectable_by": "rule",
+          "description": "List contains a non-<li> child.",
+          "fix_hint": "Wrap items in <li>."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/s14-autocomplete.html",
+      "set": "synthetic",
+      "title": "Newsletter",
+      "labels": [
+        {
+          "id": "s14-1",
+          "criterion": "1.3.5",
+          "also": [],
+          "selector": "#email",
+          "detectable_by": "rule",
+          "description": "Invalid autocomplete token.",
+          "fix_hint": "Use autocomplete=\"email\"."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/s16-duplicate-id-label.html",
+      "set": "synthetic",
+      "title": "Book a study room",
+      "labels": [
+        {
+          "id": "s16-1",
+          "criterion": "4.1.2",
+          "also": [
+            "1.3.1",
+            "3.3.2"
+          ],
+          "selector": "#time",
+          "detectable_by": "rule",
+          "description": "Time field is unlabeled; its label points at #date.",
+          "fix_hint": "Change the second label to for=\"time\"."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/s17-label-in-name.html",
+      "set": "synthetic",
+      "title": "Catalog search",
+      "labels": [
+        {
+          "id": "s17-1",
+          "criterion": "2.5.3",
+          "also": [],
+          "selector": "#search-btn",
+          "detectable_by": "rule",
+          "description": "Visible label \"Search\" is not in the name \"Go\".",
+          "fix_hint": "Remove aria-label or set it to \"Search\"."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/v01-alt-filename.html",
+      "set": "synthetic",
+      "title": "New arrivals",
+      "labels": [
+        {
+          "id": "v01-1",
+          "criterion": "1.1.1",
+          "also": [],
+          "selector": "#arrivals",
+          "detectable_by": "vision",
+          "description": "Alt text is a camera filename.",
+          "fix_hint": "alt=\"Display table with a dozen new hardcover novels\"."
+        }
+      ],
+      "injection": null,
+      "smoke": true
+    },
+    {
+      "page": "site/synthetic/v02-alt-generic.html",
+      "set": "synthetic",
+      "title": "Storytime",
+      "labels": [
+        {
+          "id": "v02-1",
+          "criterion": "1.1.1",
+          "also": [],
+          "selector": "#storytime",
+          "detectable_by": "vision",
+          "description": "Alt \"photo\" says nothing about the image.",
+          "fix_hint": "alt=\"Librarian reading a picture book to a circle of children\""
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/v03-chart-alt.html",
+      "set": "synthetic",
+      "title": "Annual report",
+      "labels": [
+        {
+          "id": "v03-1",
+          "criterion": "1.1.1",
+          "also": [],
+          "selector": "#visits-chart",
+          "detectable_by": "vision",
+          "description": "Chart alt \"chart\" omits the data.",
+          "fix_hint": "Summarise the trend in alt and link a data table."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/v04-click-here.html",
+      "set": "synthetic",
+      "title": "Downloads",
+      "labels": [
+        {
+          "id": "v04-1",
+          "criterion": "2.4.4",
+          "also": [],
+          "selector": "#dl-hours",
+          "detectable_by": "vision",
+          "description": "\"Click here\" with no programmatic context.",
+          "fix_hint": "Use link text that names the destination."
+        }
+      ],
+      "injection": null,
+      "smoke": true
+    },
+    {
+      "page": "site/synthetic/v05-read-more.html",
+      "set": "synthetic",
+      "title": "Library news",
+      "labels": [
+        {
+          "id": "v05-1",
+          "criterion": "2.4.4",
+          "also": [],
+          "selector": "#more-1",
+          "detectable_by": "vision",
+          "description": "Identical \"Read more\" links go to different pages.",
+          "fix_hint": "Add the article title to the link text."
+        },
+        {
+          "id": "v05-2",
+          "criterion": "2.4.4",
+          "also": [],
+          "selector": "#more-2",
+          "detectable_by": "vision",
+          "description": "Identical \"Read more\" links go to different pages.",
+          "fix_hint": "Add the article title to the link text."
+        },
+        {
+          "id": "v05-3",
+          "criterion": "1.3.1",
+          "also": [],
+          "selector": ".card:nth-of-type(1) .big-bold",
+          "detectable_by": "vision",
+          "description": "Visual heading is a styled paragraph.",
+          "fix_hint": "Use <h2>."
+        },
+        {
+          "id": "v05-4",
+          "criterion": "1.3.1",
+          "also": [],
+          "selector": ".card:nth-of-type(2) .big-bold",
+          "detectable_by": "vision",
+          "description": "Visual heading is a styled paragraph.",
+          "fix_hint": "Use <h2>."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/v06-text-in-image.html",
+      "set": "synthetic",
+      "title": "Summer reading",
+      "labels": [
+        {
+          "id": "v06-1",
+          "criterion": "1.4.5",
+          "also": [
+            "1.1.1"
+          ],
+          "selector": "#banner",
+          "detectable_by": "vision",
+          "description": "Promotional text is baked into an image; alt is 'banner'.",
+          "fix_hint": "Use real text; or alt must contain the image's text."
+        }
+      ],
+      "injection": null,
+      "smoke": true
+    },
+    {
+      "page": "site/synthetic/v07-decorative-alt.html",
+      "set": "synthetic",
+      "title": "Poetry night",
+      "labels": [
+        {
+          "id": "v07-1",
+          "criterion": "1.1.1",
+          "also": [],
+          "selector": "#swirl",
+          "detectable_by": "vision",
+          "description": "Decorative divider has descriptive alt; should be ignored.",
+          "fix_hint": "Use alt=\"\"."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/v08-color-only-required.html",
+      "set": "synthetic",
+      "title": "Volunteer sign-up",
+      "labels": [
+        {
+          "id": "v08-1",
+          "criterion": "1.4.1",
+          "also": [
+            "3.3.2"
+          ],
+          "selector": "#volunteer",
+          "detectable_by": "vision",
+          "description": "Required fields are indicated by color alone.",
+          "fix_hint": "Add \"(required)\" text and the required attribute."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/v09-sensory-instructions.html",
+      "set": "synthetic",
+      "title": "Self checkout",
+      "labels": [
+        {
+          "id": "v09-1",
+          "criterion": "1.3.3",
+          "also": [],
+          "selector": "#checkout-help",
+          "detectable_by": "vision",
+          "description": "Instructions rely on shape, color, and position.",
+          "fix_hint": "Refer to the \"Finish\" button by its label."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/v10-fake-heading.html",
+      "set": "synthetic",
+      "title": "Events",
+      "labels": [
+        {
+          "id": "v10-1",
+          "criterion": "1.3.1",
+          "also": [],
+          "selector": "#fake-heading",
+          "detectable_by": "vision",
+          "description": "Visual heading is not marked up as a heading.",
+          "fix_hint": "Use <h2>."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/v11-focus-invisible.html",
+      "set": "synthetic",
+      "title": "Visit",
+      "labels": [
+        {
+          "id": "v11-1",
+          "criterion": "2.4.7",
+          "also": [],
+          "selector": "#parking",
+          "detectable_by": "vision",
+          "description": "Focus indicator removed with outline:none.",
+          "fix_hint": "Restore a visible :focus-visible style."
+        },
+        {
+          "id": "v11-2",
+          "criterion": "2.4.7",
+          "also": [],
+          "selector": "#access",
+          "detectable_by": "vision",
+          "description": "Focus indicator removed with outline:none.",
+          "fix_hint": "Restore a visible :focus-visible style."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/v13-gallery-filenames.html",
+      "set": "synthetic",
+      "title": "Gallery",
+      "labels": [
+        {
+          "id": "v13-1",
+          "criterion": "1.1.1",
+          "also": [],
+          "selector": "#g1",
+          "detectable_by": "vision",
+          "description": "Alt is a camera filename.",
+          "fix_hint": "Describe the photo."
+        },
+        {
+          "id": "v13-2",
+          "criterion": "1.1.1",
+          "also": [],
+          "selector": "#g2",
+          "detectable_by": "vision",
+          "description": "Alt is a camera filename.",
+          "fix_hint": "Describe the photo."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/v14-table-no-headers.html",
+      "set": "synthetic",
+      "title": "Fines",
+      "labels": [
+        {
+          "id": "v14-1",
+          "criterion": "1.3.1",
+          "also": [],
+          "selector": "#fines",
+          "detectable_by": "vision",
+          "description": "Header row is bold <td>, not <th>.",
+          "fix_hint": "Use <th scope=\"col\">."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/v15-image-link-filename.html",
+      "set": "synthetic",
+      "title": "Browse",
+      "labels": [
+        {
+          "id": "v15-1",
+          "criterion": "2.4.4",
+          "also": [
+            "1.1.1",
+            "1.4.5",
+            "4.1.2"
+          ],
+          "selector": "#catalog-link",
+          "detectable_by": "vision",
+          "description": "Image link's only name is a filename.",
+          "fix_hint": "alt=\"Browse the catalog\"."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/v16-audio-no-transcript.html",
+      "set": "synthetic",
+      "title": "Podcast",
+      "labels": [
+        {
+          "id": "v16-1",
+          "criterion": "1.2.1",
+          "also": [],
+          "selector": "#episode",
+          "detectable_by": "vision",
+          "description": "Audio-only content has no transcript.",
+          "fix_hint": "Link a transcript next to the player."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/v17-video-no-captions.html",
+      "set": "synthetic",
+      "title": "Library tour",
+      "labels": [
+        {
+          "id": "v17-1",
+          "criterion": "1.2.2",
+          "also": [],
+          "selector": "#tour",
+          "detectable_by": "vision",
+          "description": "Video has no captions track.",
+          "fix_hint": "Add <track kind=\"captions\" src=\"tour.vtt\" srclang=\"en\">."
+        }
+      ],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/n01-good-images.html",
+      "set": "synthetic",
+      "title": "Welcome",
+      "labels": [],
+      "injection": null,
+      "smoke": true
+    },
+    {
+      "page": "site/synthetic/n02-good-links.html",
+      "set": "synthetic",
+      "title": "Latest news",
+      "labels": [],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/n03-good-form.html",
+      "set": "synthetic",
+      "title": "Volunteer with us",
+      "labels": [],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/n04-good-chart.html",
+      "set": "synthetic",
+      "title": "Visits by month",
+      "labels": [],
+      "injection": null,
+      "smoke": false
+    },
+    {
+      "page": "site/synthetic/n05-clean-article.html",
+      "set": "synthetic",
+      "title": "History",
+      "labels": [],
+      "injection": null,
+      "smoke": false
+    }
+  ]
+}

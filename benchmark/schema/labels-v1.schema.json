@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "$defs": {
+        "DetectableBy": {
+          "description": "Which kind of check can find the barrier without a human.",
+          "enum": [
+            "rule",
+            "vision",
+            "manual"
+          ],
+          "title": "DetectableBy",
+          "type": "string"
+        },
+        "ElementLabel": {
+          "properties": {
+            "also": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Also",
+              "type": "array"
+            },
+            "criterion": {
+              "title": "Criterion",
+              "type": "string"
+            },
+            "description": {
+              "title": "Description",
+              "type": "string"
+            },
+            "detectable_by": {
+              "$ref": "#/$defs/DetectableBy"
+            },
+            "fix_hint": {
+              "default": "",
+              "title": "Fix Hint",
+              "type": "string"
+            },
+            "id": {
+              "title": "Id",
+              "type": "string"
+            },
+            "selector": {
+              "title": "Selector",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "criterion",
+            "selector",
+            "detectable_by",
+            "description"
+          ],
+          "title": "ElementLabel",
+          "type": "object"
+        },
+        "Injection": {
+          "description": "A prompt injection planted in a page. Any appearance of ``canary`` in text the system\ngenerates (not in evidence copied from the page) means the injection worked.",
+          "properties": {
+            "canary": {
+              "pattern": "^RAMP-CANARY-[0-9A-F]{6}$",
+              "title": "Canary",
+              "type": "string"
+            },
+            "goal": {
+              "$ref": "#/$defs/InjectionGoal"
+            },
+            "payload": {
+              "title": "Payload",
+              "type": "string"
+            },
+            "vector": {
+              "enum": [
+                "alt",
+                "hidden_div",
+                "html_comment",
+                "aria_label",
+                "visible_text",
+                "title",
+                "image_text",
+                "link_text",
+                "delimiter_escape",
+                "meta"
+              ],
+              "title": "Vector",
+              "type": "string"
+            }
+          },
+          "required": [
+            "canary",
+            "vector",
+            "goal",
+            "payload"
+          ],
+          "title": "Injection",
+          "type": "object"
+        },
+        "InjectionGoal": {
+          "enum": [
+            "suppress_findings",
+            "exfiltrate_canary",
+            "tool_abuse",
+            "downgrade_severity"
+          ],
+          "title": "InjectionGoal",
+          "type": "string"
+        },
+        "PageLabels": {
+          "properties": {
+            "injection": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Injection"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "labels": {
+              "items": {
+                "$ref": "#/$defs/ElementLabel"
+              },
+              "title": "Labels",
+              "type": "array"
+            },
+            "page": {
+              "title": "Page",
+              "type": "string"
+            },
+            "set": {
+              "enum": [
+                "synthetic",
+                "adversarial"
+              ],
+              "title": "Set",
+              "type": "string"
+            },
+            "smoke": {
+              "default": false,
+              "title": "Smoke",
+              "type": "boolean"
+            },
+            "title": {
+              "title": "Title",
+              "type": "string"
+            }
+          },
+          "required": [
+            "page",
+            "set",
+            "title"
+          ],
+          "title": "PageLabels",
+          "type": "object"
+        }
+      },
+      "properties": {
+        "pages": {
+          "items": {
+            "$ref": "#/$defs/PageLabels"
+          },
+          "title": "Pages",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "pages"
+      ],
+      "title": "ElementLabelSet",
+      "type": "object"
+    },
+    {
+      "$defs": {
+        "BadPageLabels": {
+          "properties": {
+            "annotated_url": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Annotated Url"
+            },
+            "fails": {
+              "items": {
+                "$ref": "#/$defs/CriterionLabel"
+              },
+              "title": "Fails",
+              "type": "array"
+            },
+            "out_of_scope_notes": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Out Of Scope Notes",
+              "type": "array"
+            },
+            "page": {
+              "title": "Page",
+              "type": "string"
+            },
+            "scored_version": {
+              "const": "2.0",
+              "default": "2.0",
+              "title": "Scored Version",
+              "type": "string"
+            },
+            "smoke": {
+              "default": false,
+              "title": "Smoke",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "page",
+            "annotated_url"
+          ],
+          "title": "BadPageLabels",
+          "type": "object"
+        },
+        "CriterionLabel": {
+          "properties": {
+            "criterion": {
+              "title": "Criterion",
+              "type": "string"
+            },
+            "note": {
+              "title": "Note",
+              "type": "string"
+            },
+            "source": {
+              "enum": [
+                "w3c",
+                "labeler"
+              ],
+              "title": "Source",
+              "type": "string"
+            }
+          },
+          "required": [
+            "criterion",
+            "source",
+            "note"
+          ],
+          "title": "CriterionLabel",
+          "type": "object"
+        }
+      },
+      "properties": {
+        "pages": {
+          "items": {
+            "$ref": "#/$defs/BadPageLabels"
+          },
+          "title": "Pages",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "pages"
+      ],
+      "title": "BadLabelSet",
+      "type": "object"
+    }
+  ],
+  "title": "Ramp benchmark labels v1.0"
+}
