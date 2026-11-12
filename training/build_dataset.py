@@ -109,10 +109,12 @@ async def _get(client: httpx.AsyncClient, url: str, **kwargs: Any) -> httpx.Resp
     for attempt in range(4):
         try:
             response = await client.get(url, **kwargs)
-        except httpx.TransportError:
+        except httpx.TransportError as exc:
+            print(f"  {type(exc).__name__} from {url[:60]}; retrying", flush=True)
             await asyncio.sleep(5 * 2**attempt)
             continue
         if response.status_code == 429 or response.status_code >= 500:
+            print(f"  {response.status_code} from {url[:60]}; backing off", flush=True)
             await asyncio.sleep(float(response.headers.get("retry-after", 5 * 2**attempt)))
             continue
         return response
@@ -128,6 +130,7 @@ async def fetch(n: int) -> None:
     headers = {"User-Agent": settings.user_agent}
     IMAGES.mkdir(parents=True, exist_ok=True)
     async with httpx.AsyncClient(headers=headers, timeout=30, follow_redirects=True) as client:
+        batch = 0
         while len(records) < n:
             await limiter.wait(API)
             params = {
@@ -140,7 +143,11 @@ async def fetch(n: int) -> None:
                 "iiprop": "url|extmetadata|size|mime",
                 "iiurlwidth": "512",
                 "iiextmetadatafilter": "LicenseShortName|ImageDescription|Artist|LicenseUrl",
+                # Identical URLs are served from Wikimedia's cache, so "random" would repeat the
+                # same batch; requestid (echoed back by the API) makes every request distinct.
+                "requestid": f"ramp-{len(records)}-{batch}",
             }
+            batch += 1
             listing = await _get(client, API, params=params)
             if listing is None or listing.status_code != 200:
                 continue
@@ -178,7 +185,7 @@ async def fetch(n: int) -> None:
                         source_url=info.get("descriptionurl", ""),
                     )
                 )
-                print(f"{len(records)}/{n} {page['title'][:70]} ({license_name})")
+                print(f"{len(records)}/{n} {page['title'][:70]} ({license_name})", flush=True)
                 if len(records) >= n:
                     break
             _save(records)
