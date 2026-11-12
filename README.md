@@ -20,16 +20,30 @@ under ADA Title II), with WCAG 2.2 criteria reported as an extra layer.
 | Phase | Scope | Status |
 |---|---|---|
 | 0 | Foundation: layout, Compose stack, CI | ✅ done |
-| 1 | Deterministic baseline: crawler, `ramp-a11y-mcp`, reports | ⏳ next |
-| 2 | Benchmark and eval harness | — |
+| 1 | Deterministic baseline: crawler, `ramp-a11y-mcp`, reports | ✅ done |
+| 2 | Benchmark and eval harness | ⏳ next |
 | 3 | LangGraph agent | — |
 | 4 | Security and GitHub integration | — |
 | 5 | Distilled vision model | — |
 | 6 | LLMOps: tracing, eval-gated CI, registry | — |
 | 7 | Web app, demo, v1.0.0 | — |
 
-Results tables (baseline vs agent vs distilled model) will appear here as each phase produces them.
 Every number in this README is produced by code in this repository.
+
+### Phase 1 — the deterministic baseline reproduces axe-core exactly
+
+Ramp's pipeline (crawler → injected axe-core → report) against Deque's official
+`@axe-core/playwright`, same axe-core 4.14.0 and tags, on the eight
+[W3C BAD](https://www.w3.org/WAI/demos/bad/) pages served offline
+([`evals/results/bad_reproduction.md`](evals/results/bad_reproduction.md), checked in CI):
+
+| Page set | Reference findings | Ramp findings | Exact match |
+|---|---:|---:|---|
+| BAD "before" (4 inaccessible pages) | 238 | 238 | yes |
+| BAD "after" (4 repaired pages) | 79 | 79 | yes |
+
+The "after" pages still trigger 79 axe findings, so a page that experts repaired is not
+"zero findings" — one reason Ramp never reports a site as compliant.
 
 ## Quick start
 
@@ -37,6 +51,19 @@ Every number in this README is produced by code in this repository.
 make setup     # uv sync + pre-commit hooks
 make test      # unit tests
 make up        # api, worker, redis, MLflow, self-hosted Langfuse (Docker)
+```
+
+Audit a site and use the MCP server:
+
+```bash
+uv run ramp audit https://www.w3.org/WAI/demos/bad/before/home.html --max-pages 1
+uv run ramp mcp-server    # stdio; tools: run_axe, contrast_check, focus_order, map_to_source
+```
+
+MCP client config (Claude Desktop, Cursor, or any MCP client):
+
+```json
+{ "mcpServers": { "ramp-a11y": { "command": "uv", "args": ["run", "--directory", "/path/to/ramp-accessibility-agent", "ramp", "mcp-server"] } } }
 ```
 
 ## Repository layout
