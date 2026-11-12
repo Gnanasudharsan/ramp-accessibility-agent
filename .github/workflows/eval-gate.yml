@@ -1,0 +1,67 @@
+# Eval gate (Phase 6): a change to prompts, the agent, the model layer, or the benchmark must
+# keep the agent above ADR 0005's bars on the smoke subset, or the check fails and the PR
+# cannot merge. Model answers are cached by message content, so unchanged prompts replay for
+# free and an edited prompt is always evaluated with fresh calls.
+name: Eval gate
+
+on:
+  pull_request:
+    paths:
+      - "ramp/agent/**"
+      - "ramp/models/**"
+      - "ramp/evals/**"
+      - "ramp/checks/**"
+      - "ramp/security/**"
+      - "benchmark/**"
+      - "evals/gate.json"
+      - ".github/workflows/eval-gate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eval-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      RAMP_LLM_CACHE_DIR: .ramp/llm-cache
+    steps:
+      - name: Require the model key (forks do not receive secrets)
+        run: |
+          if [ -z "$GROQ_API_KEY" ]; then
+            echo "::error::GROQ_API_KEY is not set; the eval gate cannot run. Add it under Settings → Secrets → Actions."
+            exit 1
+          fi
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Cache Playwright browsers
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('uv.lock') }}
+      - run: uv run playwright install --with-deps chromium
+      - name: Restore cached model answers
+        uses: actions/cache@v6
+        with:
+          path: .ramp/llm-cache
+          key: llm-${{ hashFiles('ramp/agent/prompts/**', 'ramp/agent/*.py', 'ramp/models/*.py', 'ramp/config.py', 'benchmark/site/**') }}
+          restore-keys: llm-
+      - name: Run the agent on the smoke subset
+        run: uv run python -m ramp.evals.runner --system ramp-agent --subset smoke
+      - name: Check the gate
+        run: uv run python -m ramp.evals.gate
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: eval-gate-results
+          path: evals/results/ramp-agent/smoke.*
+          if-no-files-found: ignore

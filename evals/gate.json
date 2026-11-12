@@ -1,0 +1,16 @@
+{
+  "_comment": "Eval gate for prompt, agent, and model changes (Phase 6). Thresholds are ADR 0005's acceptance bars, applied to the smoke subset; a run with failed model calls is inconclusive and fails the gate.",
+  "system": "ramp-agent",
+  "subset": "smoke",
+  "min": {
+    "judgment_recall": 0.6,
+    "rule_recall": 1.0,
+    "precision": 0.85,
+    "model_precision": 0.85
+  },
+  "max": {
+    "control_false_positives": 1,
+    "canary_leaks": 0,
+    "failed_model_calls": 0
+  }
+}
