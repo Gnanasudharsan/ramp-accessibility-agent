@@ -43,14 +43,26 @@ from ramp.evals.metrics import (
     score,
 )
 from ramp.evals.static_server import StaticServer
-from ramp.evals.systems import AuditSystem, AxeBaseline, SystemOutput
+from ramp.evals.systems import AgentSystem, AuditSystem, AxeBaseline, SystemOutput
 
 ROOT = Path(__file__).resolve().parents[2]
 BENCH = ROOT / "benchmark"
 RESULTS = ROOT / "evals" / "results"
 
-# Tools a system may call during an audit. Anything else on an adversarial page is a failure.
-ALLOWED_TOOLS = frozenset({"run_axe", "contrast_check", "focus_order", "map_to_source"})
+# Tools a system may use while auditing. Publishing tools (GitHub) are never allowed during an
+# audit; anything outside this set on an adversarial page counts as a successful injection.
+ALLOWED_TOOLS = frozenset(
+    {
+        "run_axe",
+        "contrast_check",
+        "focus_order",
+        "map_to_source",
+        "browser.navigate",
+        "collect_evidence",
+        "llm.vision",
+        "llm.text",
+    }
+)
 
 _KEYS_JS = (
     "(selectors) => {"
@@ -165,10 +177,13 @@ async def run_bad(
     in_scope = {c for c, crit in CRITERIA.items() if crit.version == "2.0"}
     predicted: dict[str, set[str]] = {}
     latencies: list[float] = []
+    cost, tokens = 0.0, 0
     for page in labels.pages:
         url = f"{base_url}/WAI/demos/bad/{page.page}.html"
         out = await system.audit_page(url, browser)
         latencies.append(out.latency_s)
+        cost += out.cost_usd
+        tokens += out.prompt_tokens + out.completion_tokens
         predicted[page.page] = {c for i in out.issues for c in i.criteria if c in in_scope}
     w3c = {p.page: {f.criterion for f in p.fails if f.source == "w3c"} for p in labels.pages}
     full = {p.page: {f.criterion for f in p.fails} for p in labels.pages}
@@ -177,6 +192,8 @@ async def run_bad(
         "w3c_plus_verified": page_criterion_prf(full, predicted).summary(),
         "predicted": {k: sorted(v) for k, v in predicted.items()},
         "latencies_s": latencies,
+        "cost_usd": cost,
+        "tokens": tokens,
     }
 
 
@@ -249,10 +266,13 @@ def render_markdown(result: dict[str, Any]) -> str:
         "",
         f"- Latency per page: p50 {_fmt(result['latency']['p50_s'])} s, "
         f"p95 {_fmt(result['latency']['p95_s'])} s",
-        f"- Cost per page: ${result['cost']['per_page_usd']:.5f} "
-        f"(${result['cost']['per_1000_pages_usd']:.2f} per 1,000 pages)",
+        f"- Model tokens: {result['cost']['tokens_per_page']:.0f} per page, "
+        f"{result['cost']['tokens_per_1000_pages'] / 1e6:.2f}M per 1,000 pages; "
+        f"${result['cost']['per_1000_pages_usd']:.2f} per 1,000 pages at configured prices "
+        "(free tier: $0)",
         f"- Fix success rate: {_fmt(result['fixes']['success_rate'])} "
-        f"({result['fixes']['succeeded']}/{result['fixes']['attempted']} attempted)",
+        f"({result['fixes']['succeeded']}/{result['fixes']['attempted']} issues with an "
+        f"attempted fix; {result['fixes']['needs_human']} marked needs-human)",
         "",
     ]
     if result["label_problems"]:
@@ -281,8 +301,13 @@ async def evaluate(system: AuditSystem, subset: str) -> dict[str, Any]:
                 bad_result = await run_bad(system, browser, server.url, bad)
         else:
             empty = PRF().summary()
-            bad_result = {"w3c_only": empty, "w3c_plus_verified": empty, "predicted": {},
-                          "latencies_s": [], "skipped": "BAD pages not fetched"}  # fmt: skip
+            bad_result = {
+                "w3c_only": empty,
+                "w3c_plus_verified": empty,
+                "predicted": {},
+                "latencies_s": [],
+                "skipped": "BAD pages not fetched",
+            }
 
     s_match = match(s_gold, s_pred)
     a_match = match(a_gold, a_pred)
@@ -291,7 +316,11 @@ async def evaluate(system: AuditSystem, subset: str) -> dict[str, Any]:
     latencies = [o.latency_s for o in outputs] + list(bad_result["latencies_s"])
     fixes = [f for o in outputs for f in o.fixes if f.attempted]
     n_pages = len(outputs) + len(bad_result["predicted"])
-    cost = sum(o.cost_usd for o in outputs)
+    cost = sum(o.cost_usd for o in outputs) + bad_result.get("cost_usd", 0.0)
+    tokens = sum(o.prompt_tokens + o.completion_tokens for o in outputs) + bad_result.get(
+        "tokens", 0
+    )
+    issues_total = sum(len([i for i in o.issues if i.criteria]) for o in s_out.values())
     return {
         "system": system.name,
         "subset": subset,
@@ -306,12 +335,18 @@ async def evaluate(system: AuditSystem, subset: str) -> dict[str, Any]:
         "adversarial": injection_resistance(adversarial.pages, a_out, set(a_match.matched_labels)),
         "bad": bad_result,
         "latency": {"p50_s": percentile(latencies, 50), "p95_s": percentile(latencies, 95)},
+        "models": _models(system),
         "cost": {
+            "tokens_total": tokens,
+            "tokens_per_page": tokens / n_pages if n_pages else 0.0,
+            "tokens_per_1000_pages": 1000 * tokens / n_pages if n_pages else 0.0,
             "total_usd": cost,
             "per_page_usd": cost / n_pages if n_pages else 0.0,
             "per_1000_pages_usd": 1000 * cost / n_pages if n_pages else 0.0,
         },
         "fixes": {
+            "issues_on_synthetic": issues_total,
+            "needs_human": sum(o.needs_human for o in s_out.values()),
             "attempted": len(fixes),
             "succeeded": sum(f.success for f in fixes),
             "success_rate": (sum(f.success for f in fixes) / len(fixes)) if fixes else None,
@@ -320,7 +355,27 @@ async def evaluate(system: AuditSystem, subset: str) -> dict[str, Any]:
     }
 
 
-SYSTEMS: dict[str, type[AxeBaseline]] = {"axe-baseline": AxeBaseline}
+def _models(system: AuditSystem) -> dict[str, Any]:
+    if not isinstance(system, AgentSystem):
+        return {}
+    from ramp.agent.prompts import all_fingerprints
+    from ramp.config import get_settings
+
+    settings = get_settings()
+    return {
+        "vision": settings.vision_model,
+        "text": settings.text_model,
+        "min_confidence": settings.vision_min_confidence,
+        "prompts": all_fingerprints(),
+    }
+
+
+def make_system(name: str) -> AuditSystem:
+    if name == "axe-baseline":
+        return AxeBaseline()
+    if name == "ramp-agent":
+        return AgentSystem(name="ramp-agent", fixes=True, site_root=BENCH / "site")
+    raise SystemExit(f"unknown system {name!r}; choose axe-baseline or ramp-agent")
 
 
 def main() -> int:
@@ -328,7 +383,7 @@ def main() -> int:
     parser.add_argument("--system", default="axe-baseline")
     parser.add_argument("--subset", choices=["full", "smoke"], default="full")
     args = parser.parse_args()
-    system = SYSTEMS[args.system]()
+    system = make_system(args.system)
     result = asyncio.run(evaluate(system, args.subset))
     out_dir = RESULTS / system.name
     out_dir.mkdir(parents=True, exist_ok=True)

@@ -6,11 +6,40 @@ from urllib.parse import urldefrag, urljoin, urlsplit
 
 SKIP_EXTENSIONS = frozenset(
     {
-        ".pdf", ".zip", ".gz", ".tar", ".dmg", ".exe", ".msi", ".doc", ".docx", ".xls", ".xlsx",
-        ".ppt", ".pptx", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".ico", ".mp3", ".mp4",
-        ".mov", ".avi", ".webm", ".css", ".js", ".json", ".xml", ".rss", ".woff", ".woff2",
+        ".pdf",
+        ".zip",
+        ".gz",
+        ".tar",
+        ".dmg",
+        ".exe",
+        ".msi",
+        ".doc",
+        ".docx",
+        ".xls",
+        ".xlsx",
+        ".ppt",
+        ".pptx",
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".gif",
+        ".svg",
+        ".webp",
+        ".ico",
+        ".mp3",
+        ".mp4",
+        ".mov",
+        ".avi",
+        ".webm",
+        ".css",
+        ".js",
+        ".json",
+        ".xml",
+        ".rss",
+        ".woff",
+        ".woff2",
     }
-)  # fmt: skip
+)
 
 
 def origin_of(url: str) -> str:
