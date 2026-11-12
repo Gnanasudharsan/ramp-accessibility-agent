@@ -1,0 +1,394 @@
+{
+  "schema_version": "1.0",
+  "source": "W3C WAI Before and After Demonstration annotations (https://www.w3.org/WAI/demos/bad/), extracted 2026-11-12",
+  "pages": [
+    {
+      "page": "before/home",
+      "annotated_url": "https://www.w3.org/WAI/demos/bad/before/annotated/home.html",
+      "scored_version": "2.0",
+      "fails": [
+        {
+          "criterion": "1.1.1",
+          "source": "w3c",
+          "note": "Template 02/07: images with incorrect or missing text alternative"
+        },
+        {
+          "criterion": "1.3.1",
+          "source": "w3c",
+          "note": "Template 01/06: layout and headings not marked up"
+        },
+        {
+          "criterion": "1.3.2",
+          "source": "w3c",
+          "note": "Note 06: reading sequence not meaningful"
+        },
+        {
+          "criterion": "1.4.1",
+          "source": "w3c",
+          "note": "Template 09: links not visually distinct"
+        },
+        {
+          "criterion": "1.4.3",
+          "source": "w3c",
+          "note": "Template 10: insufficient color contrast"
+        },
+        {
+          "criterion": "2.1.1",
+          "source": "w3c",
+          "note": "Template 03/08: redirect on change; components not focusable"
+        },
+        {
+          "criterion": "2.4.1",
+          "source": "w3c",
+          "note": "Template 03/05: no mechanism to bypass repeated content"
+        },
+        {
+          "criterion": "2.4.2",
+          "source": "w3c",
+          "note": "Template 01: page title causes confusion"
+        },
+        {
+          "criterion": "2.4.4",
+          "source": "w3c",
+          "note": "Template 09: link text not descriptive"
+        },
+        {
+          "criterion": "2.4.7",
+          "source": "w3c",
+          "note": "Template 08: page components not focusable"
+        },
+        {
+          "criterion": "3.1.1",
+          "source": "labeler",
+          "note": "Verified: <HTML> element has no lang attribute"
+        },
+        {
+          "criterion": "3.2.1",
+          "source": "w3c",
+          "note": "Template 08: page components not focusable"
+        },
+        {
+          "criterion": "3.2.2",
+          "source": "w3c",
+          "note": "Template 03: automatic page redirect on change"
+        },
+        {
+          "criterion": "4.1.2",
+          "source": "w3c",
+          "note": "Note 07: image link with empty text alternative"
+        }
+      ],
+      "out_of_scope_notes": [
+        "Template 04: script compatibility (guideline 4.1, no single SC)",
+        "Template 09: 1.4.8, 2.4.9 (AAA)",
+        "Note 03/05: 1.4.8, 2.4.9 (AAA)"
+      ],
+      "smoke": true
+    },
+    {
+      "page": "before/news",
+      "annotated_url": "https://www.w3.org/WAI/demos/bad/before/annotated/news.html",
+      "scored_version": "2.0",
+      "fails": [
+        {
+          "criterion": "1.1.1",
+          "source": "w3c",
+          "note": "Template 02/07: images with incorrect or missing text alternative"
+        },
+        {
+          "criterion": "1.3.1",
+          "source": "w3c",
+          "note": "Template 01/06: layout and headings not marked up"
+        },
+        {
+          "criterion": "1.3.2",
+          "source": "w3c",
+          "note": "Note 04: reading sequence not meaningful"
+        },
+        {
+          "criterion": "1.4.1",
+          "source": "w3c",
+          "note": "Template 09: links not visually distinct"
+        },
+        {
+          "criterion": "1.4.3",
+          "source": "w3c",
+          "note": "Template 10: insufficient color contrast"
+        },
+        {
+          "criterion": "2.1.1",
+          "source": "w3c",
+          "note": "Template 03/08: redirect on change; components not focusable"
+        },
+        {
+          "criterion": "2.4.1",
+          "source": "w3c",
+          "note": "Template 03/05: no mechanism to bypass repeated content"
+        },
+        {
+          "criterion": "2.4.2",
+          "source": "w3c",
+          "note": "Template 01: page title causes confusion"
+        },
+        {
+          "criterion": "2.4.4",
+          "source": "w3c",
+          "note": "Template 09: link text not descriptive"
+        },
+        {
+          "criterion": "2.4.7",
+          "source": "w3c",
+          "note": "Template 08: page components not focusable"
+        },
+        {
+          "criterion": "3.1.1",
+          "source": "labeler",
+          "note": "Verified: <HTML> element has no lang attribute"
+        },
+        {
+          "criterion": "3.2.1",
+          "source": "w3c",
+          "note": "Template 08: page components not focusable"
+        },
+        {
+          "criterion": "3.2.2",
+          "source": "w3c",
+          "note": "Template 03: automatic page redirect on change"
+        },
+        {
+          "criterion": "4.1.2",
+          "source": "labeler",
+          "note": "Verified: <select> has no label or accessible name"
+        }
+      ],
+      "out_of_scope_notes": [
+        "Template 04: script compatibility (guideline 4.1, no single SC)",
+        "Template 09: 1.4.8, 2.4.9 (AAA)",
+        "Notes 02/03/05/06: 1.4.8, 2.4.9 (AAA)",
+        "Note 08: deprecated markup (guideline 4.1, no single SC)"
+      ],
+      "smoke": false
+    },
+    {
+      "page": "before/tickets",
+      "annotated_url": "https://www.w3.org/WAI/demos/bad/before/annotated/tickets.html",
+      "scored_version": "2.0",
+      "fails": [
+        {
+          "criterion": "1.1.1",
+          "source": "w3c",
+          "note": "Template 02/07: images with incorrect or missing text alternative"
+        },
+        {
+          "criterion": "1.3.1",
+          "source": "w3c",
+          "note": "Template 01/06: layout and headings not marked up"
+        },
+        {
+          "criterion": "1.4.1",
+          "source": "w3c",
+          "note": "Template 09: links not visually distinct"
+        },
+        {
+          "criterion": "1.4.3",
+          "source": "w3c",
+          "note": "Template 10: insufficient color contrast"
+        },
+        {
+          "criterion": "1.4.4",
+          "source": "w3c",
+          "note": "Note 04: image of text does not resize"
+        },
+        {
+          "criterion": "1.4.5",
+          "source": "w3c",
+          "note": "Notes 01/04: images of text"
+        },
+        {
+          "criterion": "2.1.1",
+          "source": "w3c",
+          "note": "Template 03/08: redirect on change; components not focusable"
+        },
+        {
+          "criterion": "2.4.1",
+          "source": "w3c",
+          "note": "Template 03/05: no mechanism to bypass repeated content"
+        },
+        {
+          "criterion": "2.4.2",
+          "source": "w3c",
+          "note": "Template 01: page title causes confusion"
+        },
+        {
+          "criterion": "2.4.4",
+          "source": "w3c",
+          "note": "Template 09: link text not descriptive"
+        },
+        {
+          "criterion": "2.4.7",
+          "source": "w3c",
+          "note": "Template 08: page components not focusable"
+        },
+        {
+          "criterion": "3.1.1",
+          "source": "labeler",
+          "note": "Verified: <HTML> element has no lang attribute"
+        },
+        {
+          "criterion": "3.2.1",
+          "source": "w3c",
+          "note": "Template 08: page components not focusable"
+        },
+        {
+          "criterion": "3.2.2",
+          "source": "w3c",
+          "note": "Template 03: automatic page redirect on change"
+        },
+        {
+          "criterion": "4.1.2",
+          "source": "labeler",
+          "note": "Verified: <select> has no label or accessible name"
+        }
+      ],
+      "out_of_scope_notes": [
+        "Template 04: script compatibility (guideline 4.1, no single SC)",
+        "Template 09: 1.4.8, 2.4.9 (AAA)",
+        "Note 07: abbreviations, 3.1.4 (AAA)",
+        "Note 08: 1.4.8 (AAA)"
+      ],
+      "smoke": false
+    },
+    {
+      "page": "before/survey",
+      "annotated_url": "https://www.w3.org/WAI/demos/bad/before/annotated/survey.html",
+      "scored_version": "2.0",
+      "fails": [
+        {
+          "criterion": "1.1.1",
+          "source": "w3c",
+          "note": "Template 02/07: images with incorrect or missing text alternative"
+        },
+        {
+          "criterion": "1.3.1",
+          "source": "w3c",
+          "note": "Template 01/06: layout and headings not marked up"
+        },
+        {
+          "criterion": "1.3.2",
+          "source": "w3c",
+          "note": "Note 06: reading sequence"
+        },
+        {
+          "criterion": "1.4.1",
+          "source": "w3c",
+          "note": "Template 09: links not visually distinct"
+        },
+        {
+          "criterion": "1.4.3",
+          "source": "w3c",
+          "note": "Template 10: insufficient color contrast"
+        },
+        {
+          "criterion": "2.1.1",
+          "source": "w3c",
+          "note": "Template 03/08: redirect on change; components not focusable"
+        },
+        {
+          "criterion": "2.4.1",
+          "source": "w3c",
+          "note": "Template 03/05: no mechanism to bypass repeated content"
+        },
+        {
+          "criterion": "2.4.2",
+          "source": "w3c",
+          "note": "Template 01: page title causes confusion"
+        },
+        {
+          "criterion": "2.4.3",
+          "source": "w3c",
+          "note": "Note 06: focus order"
+        },
+        {
+          "criterion": "2.4.4",
+          "source": "w3c",
+          "note": "Template 09: link text not descriptive"
+        },
+        {
+          "criterion": "2.4.7",
+          "source": "w3c",
+          "note": "Template 08: page components not focusable"
+        },
+        {
+          "criterion": "3.1.1",
+          "source": "labeler",
+          "note": "Verified: <HTML> element has no lang attribute"
+        },
+        {
+          "criterion": "3.2.1",
+          "source": "w3c",
+          "note": "Template 08: page components not focusable"
+        },
+        {
+          "criterion": "3.2.2",
+          "source": "w3c",
+          "note": "Template 03: automatic page redirect on change"
+        },
+        {
+          "criterion": "3.3.2",
+          "source": "w3c",
+          "note": "Notes 01-04/06: missing instructions and labels"
+        },
+        {
+          "criterion": "4.1.2",
+          "source": "labeler",
+          "note": "Verified: <select> has no label or accessible name"
+        }
+      ],
+      "out_of_scope_notes": [
+        "Template 04: script compatibility (guideline 4.1, no single SC)",
+        "Template 09: 1.4.8, 2.4.9 (AAA)"
+      ],
+      "smoke": false
+    },
+    {
+      "page": "after/home",
+      "annotated_url": null,
+      "scored_version": "2.0",
+      "fails": [],
+      "out_of_scope_notes": [
+        "W3C presents the 'after' pages as conforming to WCAG 2.0 AA; no A/AA failures labeled."
+      ],
+      "smoke": true
+    },
+    {
+      "page": "after/news",
+      "annotated_url": null,
+      "scored_version": "2.0",
+      "fails": [],
+      "out_of_scope_notes": [
+        "W3C presents the 'after' pages as conforming to WCAG 2.0 AA; no A/AA failures labeled."
+      ],
+      "smoke": false
+    },
+    {
+      "page": "after/tickets",
+      "annotated_url": null,
+      "scored_version": "2.0",
+      "fails": [],
+      "out_of_scope_notes": [
+        "W3C presents the 'after' pages as conforming to WCAG 2.0 AA; no A/AA failures labeled."
+      ],
+      "smoke": false
+    },
+    {
+      "page": "after/survey",
+      "annotated_url": null,
+      "scored_version": "2.0",
+      "fails": [],
+      "out_of_scope_notes": [
+        "W3C presents the 'after' pages as conforming to WCAG 2.0 AA; no A/AA failures labeled."
+      ],
+      "smoke": false
+    }
+  ]
+}
