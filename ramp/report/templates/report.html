@@ -114,6 +114,19 @@
   </section>
   {% endfor %}
 
+  {% if report.fixes %}
+  <h2 id="fixes">Proposed fixes</h2>
+  <p>Each fix was applied to a copy of the source, re-rendered, and re-checked. Only fixes marked verified are offered for approval; nothing is merged without a human approving the exact diff.</p>
+  {% for fix in report.fixes %}
+  <section class="rule" aria-labelledby="fix-{{ fix.id }}">
+    <h3 id="fix-{{ fix.id }}"><code>{{ fix.file }}</code></h3>
+    <p class="meta"><span class="sev {{ 'sev-minor' if fix.status == 'verified' else 'sev-serious' }}">{{ '✓ Verified' if fix.status == 'verified' else '✕ ' ~ fix.status|capitalize }}</span>{% if fix.failure %} · {{ fix.failure }}{% endif %}{% if fix.visual_diff_ratio is not none %} · {{ '%.2f'|format(fix.visual_diff_ratio * 100) }}% of pixels changed{% endif %}{% if fix.approved %} · approved{% endif %}</p>
+    <p>{{ fix.explanation }}</p>
+    <pre>{{ fix.diff }}</pre>
+  </section>
+  {% endfor %}
+  {% endif %}
+
   <h2 id="coverage">What was checked</h2>
   <p>{{ report.coverage.axe_rules_run }} axe-core rules ran with tags <code>{{ report.coverage.axe_tags|join(', ') }}</code>. They cover {{ report.coverage.criteria_checked|length }} WCAG success criteria at least partly:</p>
   <ul class="inline">
