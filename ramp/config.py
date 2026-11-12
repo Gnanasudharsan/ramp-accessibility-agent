@@ -24,8 +24,17 @@ class Settings(BaseSettings):
     # Infrastructure.
     redis_url: str = "redis://localhost:6379/1"
 
-    # Models (LiteLLM model strings, e.g. "groq/<model>" or "gemini/<model>").
-    large_model: str = "groq/meta-llama/llama-4-scout-17b-16e-instruct"
+    # Models (LiteLLM model strings, e.g. "groq/<model>" or "gemini/<model>"). See ADR 0005.
+    vision_model: str = "groq/qwen/qwen3.8-27b"
+    text_model: str = "groq/openai/gpt-oss-120b"
+    llm_cache_dir: str = ".ramp/llm-cache"
+    llm_max_retries: int = Field(default=2, ge=0, le=5)  # schema-violation retries
+    vision_min_confidence: float = Field(default=0.6, ge=0.0, le=1.0)
+    max_images_per_page: int = Field(default=15, ge=0, le=100)
+    max_fixes_per_audit: int = Field(default=40, ge=0, le=500)
+    # Optional list prices (USD per 1M tokens) for cost reporting; 0 = unknown / free tier.
+    price_input_per_mtok: float = 0.0
+    price_output_per_mtok: float = 0.0
     demo_mode: bool = False
 
 
