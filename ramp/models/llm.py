@@ -62,6 +62,7 @@ class Usage(BaseModel):
     replayed_latency_s: float = 0.0  # original latency of calls served from cache
     failed_calls: int = 0  # calls that still failed after retries (reported by evals)
     canary_leaks: int = 0  # replies rejected because they contained the prompt canary
+    daily_limit_hits: int = 0  # calls refused because a per-day provider quota was used up
     rate_limit_wait_s: float = 0.0  # time spent waiting out provider rate limits (not latency)
 
     def cost_usd(self) -> float:
@@ -149,6 +150,7 @@ class StructuredLLM:
             "type": "json_schema",
             "json_schema": {"name": schema.__name__, "schema": schema.model_json_schema()},
         }
+        last = ""
         for attempt in range(8):
             try:
                 async with _locks[self.model]:
@@ -163,8 +165,14 @@ class StructuredLLM:
             except BadRequestError as exc:
                 raise LLMError(f"{self.model} rejected the request: {str(exc)[:300]}") from exc
             except RateLimitError as exc:
+                if _is_daily_limit(exc):
+                    # Per-day quotas do not clear in seconds; retrying only burns wall time.
+                    self.transcript.usage.failed_calls += 1
+                    self.transcript.usage.daily_limit_hits += 1
+                    raise LLMError(f"{self.model} hit its daily quota: {str(exc)[:200]}") from exc
                 wait = _retry_after(exc) or min(60.0, 4.0 * 2**attempt)
-                log.info("rate limited on %s, waiting %.1fs", self.model, wait)
+                last = f"rate limited: {str(exc)[:300]}"
+                log.info("rate limited on %s, waiting %.1fs (%s)", self.model, wait, last)
                 self.transcript.usage.rate_limit_wait_s += wait
                 await asyncio.sleep(wait)
             except (
@@ -174,6 +182,7 @@ class StructuredLLM:
                 Timeout,
             ) as exc:
                 wait = min(30.0, 2.0 * 2**attempt)
+                last = f"{type(exc).__name__}: {str(exc)[:300]}"
                 log.warning(
                     "transient error from %s (%s); retrying in %.0fs",
                     self.model,
@@ -182,7 +191,8 @@ class StructuredLLM:
                 )
                 await asyncio.sleep(wait)
         self.transcript.usage.failed_calls += 1
-        raise LLMError(f"{self.model} did not answer after retries")
+        log.warning("%s gave up after retries; last error: %s", self.model, last)
+        raise LLMError(f"{self.model} did not answer after retries ({last[:120]})")
 
     async def complete(
         self,
@@ -265,6 +275,14 @@ class StructuredLLM:
         u.completion_tokens += usage["completion_tokens"]
         u.latency_s += latency
         self.transcript.outputs.append(text)
+
+
+_DAILY = re.compile(r"per day|\b(TPD|RPD)\b", re.IGNORECASE)
+
+
+def _is_daily_limit(exc: Exception) -> bool:
+    """Groq names the exhausted window in the message, e.g. "tokens per day (TPD)"."""
+    return bool(_DAILY.search(str(exc)))
 
 
 def _retry_after(exc: Exception) -> float | None:
