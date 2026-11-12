@@ -17,6 +17,11 @@ dependencies = [
     "sse-starlette>=3.7",
     "arq>=0.28",
     "redis>=5,<7",
+    "playwright>=1.65",
+    "mcp>=2.3",
+    "pillow>=11",
+    "jinja2>=3.1",
+    "protego>=0.4",
 ]
 
 [project.scripts]
@@ -45,7 +50,10 @@ extend-exclude = ["web", "benchmark/pages"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "B", "A", "C4", "SIM", "RUF", "S", "ASYNC", "PT"]
-ignore = ["S101"]  # assert is fine in tests
+ignore = [
+    "S101",  # assert is fine in tests
+    "ASYNC230", "ASYNC240",  # small local artifact writes; audits are bound by network I/O
+]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S", "PT011"]
