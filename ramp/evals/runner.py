@@ -177,13 +177,14 @@ async def run_bad(
     in_scope = {c for c, crit in CRITERIA.items() if crit.version == "2.0"}
     predicted: dict[str, set[str]] = {}
     latencies: list[float] = []
-    cost, tokens = 0.0, 0
+    cost, tokens, failed = 0.0, 0, 0
     for page in labels.pages:
         url = f"{base_url}/WAI/demos/bad/{page.page}.html"
         out = await system.audit_page(url, browser)
         latencies.append(out.latency_s)
         cost += out.cost_usd
         tokens += out.prompt_tokens + out.completion_tokens
+        failed += out.failed_model_calls
         predicted[page.page] = {c for i in out.issues for c in i.criteria if c in in_scope}
     w3c = {p.page: {f.criterion for f in p.fails if f.source == "w3c"} for p in labels.pages}
     full = {p.page: {f.criterion for f in p.fails} for p in labels.pages}
@@ -194,6 +195,7 @@ async def run_bad(
         "latencies_s": latencies,
         "cost_usd": cost,
         "tokens": tokens,
+        "failed_model_calls": failed,
     }
 
 
@@ -275,6 +277,12 @@ def render_markdown(result: dict[str, Any]) -> str:
         f"attempted fix; {result['fixes']['needs_human']} marked needs-human)",
         "",
     ]
+    if result.get("failed_model_calls"):
+        lines += [
+            f"Model calls that failed after retries: {result['failed_model_calls']} "
+            "(their checks were skipped, which can only lower recall).",
+            "",
+        ]
     if result["label_problems"]:
         lines += ["## Label problems", "", *[f"- {p}" for p in result["label_problems"]], ""]
     return "\n".join(lines)
@@ -352,6 +360,8 @@ async def evaluate(system: AuditSystem, subset: str) -> dict[str, Any]:
             "success_rate": (sum(f.success for f in fixes) / len(fixes)) if fixes else None,
         },
         "label_problems": problems + a_problems,
+        "failed_model_calls": sum(o.failed_model_calls for o in outputs)
+        + bad_result.get("failed_model_calls", 0),
     }
 
 

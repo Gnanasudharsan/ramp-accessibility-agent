@@ -49,6 +49,7 @@ class SystemOutput(BaseModel):
     prompt_tokens: int = 0
     completion_tokens: int = 0
     needs_human: int = 0
+    failed_model_calls: int = 0
 
 
 class AuditSystem(Protocol):
@@ -159,4 +160,5 @@ class AgentSystem:
             prompt_tokens=usage.prompt_tokens,
             completion_tokens=usage.completion_tokens,
             needs_human=len(final.needs_human),
+            failed_model_calls=usage.failed_calls,
         )

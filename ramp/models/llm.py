@@ -27,7 +27,14 @@ from pathlib import Path
 from typing import Any, TypeVar
 
 import litellm
-from litellm.exceptions import BadRequestError, RateLimitError
+from litellm.exceptions import (
+    APIConnectionError,
+    BadRequestError,
+    InternalServerError,
+    RateLimitError,
+    ServiceUnavailableError,
+    Timeout,
+)
 from PIL import Image
 from pydantic import BaseModel, Field, ValidationError
 
@@ -52,6 +59,7 @@ class Usage(BaseModel):
     completion_tokens: int = 0
     latency_s: float = 0.0  # sum of original call latencies (cache hits included)
     replayed_latency_s: float = 0.0  # original latency of calls served from cache
+    failed_calls: int = 0  # calls that still failed after retries (reported by evals)
 
     def cost_usd(self) -> float:
         s = get_settings()
@@ -151,7 +159,22 @@ class StructuredLLM:
                 wait = _retry_after(exc) or min(60.0, 4.0 * 2**attempt)
                 log.info("rate limited on %s, waiting %.1fs", self.model, wait)
                 await asyncio.sleep(wait)
-        raise LLMError(f"rate limit not cleared for {self.model}")
+            except (
+                APIConnectionError,
+                InternalServerError,
+                ServiceUnavailableError,
+                Timeout,
+            ) as exc:
+                wait = min(30.0, 2.0 * 2**attempt)
+                log.warning(
+                    "transient error from %s (%s); retrying in %.0fs",
+                    self.model,
+                    type(exc).__name__,
+                    wait,
+                )
+                await asyncio.sleep(wait)
+        self.transcript.usage.failed_calls += 1
+        raise LLMError(f"{self.model} did not answer after retries")
 
     async def complete(
         self, *, system: str, user: list[dict[str, Any]] | str, schema: type[T]
