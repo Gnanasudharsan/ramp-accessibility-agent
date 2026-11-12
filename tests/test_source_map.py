@@ -41,3 +41,18 @@ def test_repo_path_must_be_inside_allowed_roots(
         resolve_repo_path(str(tmp_path))
     with pytest.raises(ToolError, match="outside"):
         resolve_repo_path(str(fixture_repo / ".." / ".."))
+
+
+def test_id_matches_as_attribute_not_substring(tmp_path: Path) -> None:
+    (tmp_path / "a.html").write_text('<img id="other" src="reading-room.png">\n')
+    (tmp_path / "b.html").write_text('<img id="reading-room" src="reading-room.png">\n')
+    best = map_to_source('<img id="reading-room" src="reading-room.png">', tmp_path)[0]
+    assert best.path == "b.html"
+
+
+def test_preferred_file_wins_ties(tmp_path: Path) -> None:
+    for name in ("a.html", "b.html"):
+        (tmp_path / name).write_text('<img src="shared.png">\n')
+    best = map_to_source('<img src="shared.png">', tmp_path, prefer_file="b.html")[0]
+    assert best.path == "b.html"
+    assert "served_file" in best.matched

@@ -14,16 +14,43 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 SOURCE_EXTENSIONS = frozenset(
-    {".html", ".htm", ".jsx", ".tsx", ".js", ".ts", ".vue", ".svelte", ".astro", ".njk",
-     ".liquid", ".hbs", ".erb", ".php", ".jinja", ".j2", ".mdx"}
-)  # fmt: skip
+    {
+        ".html",
+        ".htm",
+        ".jsx",
+        ".tsx",
+        ".js",
+        ".ts",
+        ".vue",
+        ".svelte",
+        ".astro",
+        ".njk",
+        ".liquid",
+        ".hbs",
+        ".erb",
+        ".php",
+        ".jinja",
+        ".j2",
+        ".mdx",
+    }
+)
 SKIP_DIRS = frozenset(
     {".git", "node_modules", "dist", "build", ".next", "out", ".venv", "vendor", "coverage"}
 )
 MAX_FILE_BYTES = 1_000_000
 
-WEIGHTS = {"id": 6.0, "src": 4.0, "href": 3.0, "name": 3.0, "for": 3.0, "alt": 3.0,
-           "aria-label": 3.0, "class": 1.0, "text": 2.0, "tag": 1.0}  # fmt: skip
+WEIGHTS = {
+    "id": 6.0,
+    "src": 4.0,
+    "href": 3.0,
+    "name": 3.0,
+    "for": 3.0,
+    "alt": 3.0,
+    "aria-label": 3.0,
+    "class": 1.0,
+    "text": 2.0,
+    "tag": 1.0,
+}
 
 
 @dataclass
@@ -100,8 +127,27 @@ def _iter_source_files(root: Path) -> list[Path]:
     return sorted(files)
 
 
-def map_to_source(html_snippet: str, repo_path: Path, top_k: int = 5) -> list[SourceCandidate]:
-    """Rank source locations for the element described by ``html_snippet``."""
+_ATTR_EXACT = frozenset({"id", "name", "for"})
+PREFERRED_FILE_BONUS = 10.0
+
+
+def _needle_in(kind: str, value: str, window: str) -> bool:
+    """Identifier attributes must match as attributes (``id="hero"``), not as substrings, so
+    ``id="reading-room"`` does not match ``src="reading-room.png"``."""
+    if kind in _ATTR_EXACT:
+        pattern = rf"""\b{re.escape(kind)}\s*=\s*["'{{]?{re.escape(value)}["'}}\s/>]"""
+        return re.search(pattern, window) is not None
+    return value in window
+
+
+def map_to_source(
+    html_snippet: str, repo_path: Path, top_k: int = 5, prefer_file: str | None = None
+) -> list[SourceCandidate]:
+    """Rank source locations for the element described by ``html_snippet``.
+
+    ``prefer_file`` (relative to ``repo_path``) is the file known to render the page, for example
+    the static file served at the audited URL; its candidates win ties against other files.
+    """
     sig = parse_signature(html_snippet)
     if sig is None:
         return []
@@ -120,13 +166,18 @@ def map_to_source(html_snippet: str, repo_path: Path, top_k: int = 5) -> list[So
             window = "\n".join(lines[idx : idx + 6])  # opening tags often span lines
             score, matched = WEIGHTS["tag"], ["tag"]
             for kind, value in needles:
-                if value in window:
+                if _needle_in(kind, value, window):
                     score += WEIGHTS[kind]
                     matched.append(kind)
+            relative = str(path.relative_to(root))
+            distinctive = len(matched) > 1 or not needles  # bare tags like <html> have no needles
+            if prefer_file is not None and relative == prefer_file and distinctive:
+                score += PREFERRED_FILE_BONUS
+                matched.append("served_file")
             if len(matched) > 1 or not needles:
                 candidates.append(
                     SourceCandidate(
-                        path=str(path.relative_to(root)),
+                        path=relative,
                         line=idx + 1,
                         score=score,
                         matched=tuple(matched),
