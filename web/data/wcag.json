@@ -1,0 +1,277 @@
+{
+ "1.1.1": {
+  "name": "Non-text Content",
+  "level": "A",
+  "in_target": true
+ },
+ "1.2.1": {
+  "name": "Audio-only and Video-only (Prerecorded)",
+  "level": "A",
+  "in_target": true
+ },
+ "1.2.2": {
+  "name": "Captions (Prerecorded)",
+  "level": "A",
+  "in_target": true
+ },
+ "1.2.3": {
+  "name": "Audio Description or Media Alternative (Prerecorded)",
+  "level": "A",
+  "in_target": true
+ },
+ "1.2.4": {
+  "name": "Captions (Live)",
+  "level": "AA",
+  "in_target": true
+ },
+ "1.2.5": {
+  "name": "Audio Description (Prerecorded)",
+  "level": "AA",
+  "in_target": true
+ },
+ "1.3.1": {
+  "name": "Info and Relationships",
+  "level": "A",
+  "in_target": true
+ },
+ "1.3.2": {
+  "name": "Meaningful Sequence",
+  "level": "A",
+  "in_target": true
+ },
+ "1.3.3": {
+  "name": "Sensory Characteristics",
+  "level": "A",
+  "in_target": true
+ },
+ "1.3.4": {
+  "name": "Orientation",
+  "level": "AA",
+  "in_target": true
+ },
+ "1.3.5": {
+  "name": "Identify Input Purpose",
+  "level": "AA",
+  "in_target": true
+ },
+ "1.4.1": {
+  "name": "Use of Color",
+  "level": "A",
+  "in_target": true
+ },
+ "1.4.2": {
+  "name": "Audio Control",
+  "level": "A",
+  "in_target": true
+ },
+ "1.4.3": {
+  "name": "Contrast (Minimum)",
+  "level": "AA",
+  "in_target": true
+ },
+ "1.4.4": {
+  "name": "Resize Text",
+  "level": "AA",
+  "in_target": true
+ },
+ "1.4.5": {
+  "name": "Images of Text",
+  "level": "AA",
+  "in_target": true
+ },
+ "1.4.10": {
+  "name": "Reflow",
+  "level": "AA",
+  "in_target": true
+ },
+ "1.4.11": {
+  "name": "Non-text Contrast",
+  "level": "AA",
+  "in_target": true
+ },
+ "1.4.12": {
+  "name": "Text Spacing",
+  "level": "AA",
+  "in_target": true
+ },
+ "1.4.13": {
+  "name": "Content on Hover or Focus",
+  "level": "AA",
+  "in_target": true
+ },
+ "2.1.1": {
+  "name": "Keyboard",
+  "level": "A",
+  "in_target": true
+ },
+ "2.1.2": {
+  "name": "No Keyboard Trap",
+  "level": "A",
+  "in_target": true
+ },
+ "2.1.4": {
+  "name": "Character Key Shortcuts",
+  "level": "A",
+  "in_target": true
+ },
+ "2.2.1": {
+  "name": "Timing Adjustable",
+  "level": "A",
+  "in_target": true
+ },
+ "2.2.2": {
+  "name": "Pause, Stop, Hide",
+  "level": "A",
+  "in_target": true
+ },
+ "2.3.1": {
+  "name": "Three Flashes or Below Threshold",
+  "level": "A",
+  "in_target": true
+ },
+ "2.4.1": {
+  "name": "Bypass Blocks",
+  "level": "A",
+  "in_target": true
+ },
+ "2.4.2": {
+  "name": "Page Titled",
+  "level": "A",
+  "in_target": true
+ },
+ "2.4.3": {
+  "name": "Focus Order",
+  "level": "A",
+  "in_target": true
+ },
+ "2.4.4": {
+  "name": "Link Purpose (In Context)",
+  "level": "A",
+  "in_target": true
+ },
+ "2.4.5": {
+  "name": "Multiple Ways",
+  "level": "AA",
+  "in_target": true
+ },
+ "2.4.6": {
+  "name": "Headings and Labels",
+  "level": "AA",
+  "in_target": true
+ },
+ "2.4.7": {
+  "name": "Focus Visible",
+  "level": "AA",
+  "in_target": true
+ },
+ "2.4.11": {
+  "name": "Focus Not Obscured (Minimum)",
+  "level": "AA",
+  "in_target": false
+ },
+ "2.5.1": {
+  "name": "Pointer Gestures",
+  "level": "A",
+  "in_target": true
+ },
+ "2.5.2": {
+  "name": "Pointer Cancellation",
+  "level": "A",
+  "in_target": true
+ },
+ "2.5.3": {
+  "name": "Label in Name",
+  "level": "A",
+  "in_target": true
+ },
+ "2.5.4": {
+  "name": "Motion Actuation",
+  "level": "A",
+  "in_target": true
+ },
+ "2.5.7": {
+  "name": "Dragging Movements",
+  "level": "AA",
+  "in_target": false
+ },
+ "2.5.8": {
+  "name": "Target Size (Minimum)",
+  "level": "AA",
+  "in_target": false
+ },
+ "3.1.1": {
+  "name": "Language of Page",
+  "level": "A",
+  "in_target": true
+ },
+ "3.1.2": {
+  "name": "Language of Parts",
+  "level": "AA",
+  "in_target": true
+ },
+ "3.2.1": {
+  "name": "On Focus",
+  "level": "A",
+  "in_target": true
+ },
+ "3.2.2": {
+  "name": "On Input",
+  "level": "A",
+  "in_target": true
+ },
+ "3.2.3": {
+  "name": "Consistent Navigation",
+  "level": "AA",
+  "in_target": true
+ },
+ "3.2.4": {
+  "name": "Consistent Identification",
+  "level": "AA",
+  "in_target": true
+ },
+ "3.2.6": {
+  "name": "Consistent Help",
+  "level": "A",
+  "in_target": false
+ },
+ "3.3.1": {
+  "name": "Error Identification",
+  "level": "A",
+  "in_target": true
+ },
+ "3.3.2": {
+  "name": "Labels or Instructions",
+  "level": "A",
+  "in_target": true
+ },
+ "3.3.3": {
+  "name": "Error Suggestion",
+  "level": "AA",
+  "in_target": true
+ },
+ "3.3.4": {
+  "name": "Error Prevention (Legal, Financial, Data)",
+  "level": "AA",
+  "in_target": true
+ },
+ "3.3.7": {
+  "name": "Redundant Entry",
+  "level": "A",
+  "in_target": false
+ },
+ "3.3.8": {
+  "name": "Accessible Authentication (Minimum)",
+  "level": "AA",
+  "in_target": false
+ },
+ "4.1.2": {
+  "name": "Name, Role, Value",
+  "level": "A",
+  "in_target": true
+ },
+ "4.1.3": {
+  "name": "Status Messages",
+  "level": "AA",
+  "in_target": true
+ }
+}

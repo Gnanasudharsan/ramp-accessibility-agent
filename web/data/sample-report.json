@@ -1,0 +1,1441 @@
+{
+ "schema_version": "1.1",
+ "target": "https://www.w3.org/WAI/demos/bad/before/home.html",
+ "started_at": "2026-11-12T19:41:40.085336Z",
+ "finished_at": "2026-11-12T19:41:41.566088Z",
+ "ramp_version": "0.0.0",
+ "pages": [
+  {
+   "url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+   "final_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+   "title": "Welcome to CityLights! [Inaccessible Home Page]",
+   "depth": 0,
+   "status": 200,
+   "issues": [
+    {
+     "id": "597e5c1c710e",
+     "rule_id": "color-contrast",
+     "title": "Elements must meet minimum color contrast ratio thresholds",
+     "criteria": [
+      "1.4.3"
+     ],
+     "severity": "serious",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "tr[height=\"25px\"]:nth-child(2) > td[bgcolor=\"#A9B8BF\"][width=\"150px\"] > font[color=\"#41545D\"][size=\"2\"] > b",
+     "evidence": {
+      "html_snippet": "<b>Free Penguins</b>",
+      "failure_summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.88 (foreground color: #41545d, background color: #a9b8bf, font size: 9.8pt (13px), font weight: bold). Expected contrast ratio of 4.5:1"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "aa93ddc2265a",
+     "rule_id": "color-contrast",
+     "title": "Elements must meet minimum color contrast ratio thresholds",
+     "criteria": [
+      "1.4.3"
+     ],
+     "severity": "serious",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "tr[height=\"25px\"]:nth-child(7) > td[bgcolor=\"#A9B8BF\"][width=\"150px\"] > font[color=\"#41545D\"][size=\"2\"] > b",
+     "evidence": {
+      "html_snippet": "<b>More City Parks</b>",
+      "failure_summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.88 (foreground color: #41545d, background color: #a9b8bf, font size: 9.8pt (13px), font weight: bold). Expected contrast ratio of 4.5:1"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "ade0582043d0",
+     "rule_id": "html-has-lang",
+     "title": "<html> element must have a lang attribute",
+     "criteria": [
+      "3.1.1"
+     ],
+     "severity": "serious",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "html",
+     "evidence": {
+      "html_snippet": "<html>",
+      "failure_summary": "Fix any of the following:\n  The <html> element does not have a lang attribute"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/html-has-lang?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "d4f06ceaea34",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[src$=\"border_left_top.gif\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/border_left_top.gif\" width=\"10px\" height=\"10px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "ac3f4bb3aba9",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[src$=\"border_top.gif\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/border_top.gif\" height=\"10px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "779538269219",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[src$=\"border_right_top.gif\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/border_right_top.gif\" width=\"10px\" height=\"10px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "c82a2ee8fb92",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[src$=\"border_left.gif\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/border_left.gif\" width=\"10px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "1baee8332090",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[src$=\"top_logo_next_end.gif\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/top_logo_next_end.gif\" width=\"24px\" height=\"86px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "5e2cba919d47",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[src$=\"top_weather.gif\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/top_weather.gif\" width=\"128px\" height=\"86px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "67e0515cd2d9",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[src$=\"top_logo_next_start.gif\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/top_logo_next_start.gif\" width=\"22px\" height=\"86px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "868870d3d7a5",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[src$=\"mark.gif\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/mark.gif\" width=\"158px\" height=\"7px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "b3f1a3333f4a",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "td[colspan=\"5\"][background=\"./img/marker2_w.gif\"][width=\"780px\"] > img[src$=\"marker2_w.gif\"][width=\"78px\"][height=\"1px\"]",
+     "evidence": {
+      "html_snippet": "<img src=\".img/marker2_w.gif\" width=\"78px\" height=\"1px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "9de613ae1e58",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "td[width=\"155px\"][background=\"./img/marker2_w.gif\"] > img[src$=\"marker2_w.gif\"][width=\"78px\"][height=\"1px\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/marker2_w.gif\" width=\"78px\" height=\"1px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "166d25fe7ea4",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[width=\"1\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/marker2_t.gif\" width=\"1\" height=\"30px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "54b14b467781",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[name=\"nav_home\"]",
+     "evidence": {
+      "html_snippet": "<img name=\"nav_home\" src=\"./img/nav_home.gif\" width=\"88\" height=\"27\" hspace=\"15\" border=\"0px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "f61a359f1f4a",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "tr[height=\"1px\"]:nth-child(3) > td[width=\"154px\"][background=\"./img/marker2_w.gif\"] > img[src$=\"marker2_w.gif\"][width=\"78px\"][height=\"1px\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/marker2_w.gif\" width=\"78px\" height=\"1px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "024ed0d4f442",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[src$=\"nav_news.gif\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/nav_news.gif\" name=\"nav_news\" width=\"90\" height=\"21\" hspace=\"12\" border=\"0px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "ce82809f454b",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "tr[height=\"1px\"]:nth-child(5) > td[width=\"154px\"][background=\"./img/marker2_w.gif\"] > img[src$=\"marker2_w.gif\"][width=\"78px\"][height=\"1px\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/marker2_w.gif\" width=\"78px\" height=\"1px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "80bdde7c8923",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[name=\"nav_facts\"]",
+     "evidence": {
+      "html_snippet": "<img name=\"nav_facts\" src=\"./img/nav_facts.gif\" width=\"105\" height=\"23\" hspace=\"9\" border=\"0px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "20b16b783b51",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "tr[height=\"1px\"]:nth-child(7) > td[width=\"154px\"][background=\"./img/marker2_w.gif\"] > img[src$=\"marker2_w.gif\"][width=\"78px\"][height=\"1px\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/marker2_w.gif\" width=\"78px\" height=\"1px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "2acc21b6309c",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[src$=\"nav_survey.gif\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/nav_survey.gif\" name=\"nav_survey\" width=\"107\" height=\"32\" hspace=\"8\" border=\"0px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "a95a1fa37b6c",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "tr[height=\"1px\"]:nth-child(9) > td[width=\"154px\"][background=\"./img/marker2_w.gif\"] > img[src$=\"marker2_w.gif\"][width=\"78px\"][height=\"1px\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/marker2_w.gif\" width=\"78px\" height=\"1px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "58eb92417be0",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "td[width=\"20px\"]:nth-child(2) > img[src$=\"blank_5x5.gif\"][height=\"5px\"][width=\"20px\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/blank_5x5.gif\" width=\"20px\" height=\"5px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "4e688dcec120",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": ".newsheadline:nth-child(1) > img[src$=\"headline_middle.gif\"][width=\"23\"][height=\"24\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/headline_middle.gif\" width=\"23\" height=\"24\" align=\"absmiddle\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "f2b650997b60",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": ".newsheadline:nth-child(2) > img[src$=\"headline_middle.gif\"][width=\"23\"][height=\"24\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/headline_middle.gif\" width=\"23\" height=\"24\" align=\"absmiddle\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "a6b6acb3b8cd",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": ".newsheadline:nth-child(3) > img[src$=\"headline_middle.gif\"][width=\"23\"][height=\"24\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/headline_middle.gif\" width=\"23\" height=\"24\" align=\"absmiddle\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "fd60085fee78",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "td[width=\"20px\"]:nth-child(4) > img[src$=\"blank_5x5.gif\"][height=\"5px\"][width=\"20px\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/blank_5x5.gif\" width=\"20px\" height=\"5px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "20da6106b42a",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[src$=\"marker2_t.gif\"][height=\"30px\"][width=\"1px\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/marker2_t.gif\" width=\"1px\" height=\"30px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "350900524bca",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "td[width=\"151px\"][background=\"./img/marker2_w.gif\"] > img[src$=\"marker2_w.gif\"][width=\"78px\"][height=\"1px\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/marker2_w.gif\" width=\"78px\" height=\"1px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "40ef4028b684",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[src$=\"teaser_right1.jpg\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/teaser_right1.jpg\" width=\"150px\" height=\"106px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "528650640206",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "td[background=\"./img/marker2_w.gif\"][width=\"150px\"] > img[src$=\"marker2_w.gif\"][width=\"78px\"][height=\"1px\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/marker2_w.gif\" width=\"78px\" height=\"1px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "7240fe053a69",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[src$=\"teaser_right2.jpg\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/teaser_right2.jpg\" width=\"150px\" height=\"154px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "b930bfad4513",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[src$=\"border_right.gif\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/border_right.gif\" width=\"10px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "ec409f846903",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[src$=\"border_bottom_left.gif\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/border_bottom_left.gif\" width=\"10px\" height=\"10px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "4038f8d1f077",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[src$=\"border_bottom.gif\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/border_bottom.gif\" height=\"10px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "6e2247c1d023",
+     "rule_id": "image-alt",
+     "title": "Images must have alternative text",
+     "criteria": [
+      "1.1.1"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "img[src$=\"border_bottom_right.gif\"]",
+     "evidence": {
+      "html_snippet": "<img src=\"./img/border_bottom_right.gif\" width=\"10px\" height=\"10px\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/image-alt?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "c599aa95850f",
+     "rule_id": "landmark-one-main",
+     "title": "Document should have one main landmark",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "html",
+     "evidence": {
+      "html_snippet": "<html>",
+      "failure_summary": "Fix all of the following:\n  Document does not have a main landmark"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/landmark-one-main?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "8eec0a68960a",
+     "rule_id": "link-name",
+     "title": "Links must have discernible text",
+     "criteria": [
+      "2.4.4",
+      "4.1.2"
+     ],
+     "severity": "serious",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "#home > a[onfocus=\"blur();\"]",
+     "evidence": {
+      "html_snippet": "<a href=\"javascript:location.href='home.html';\" onfocus=\"blur();\"><img name=\"nav_home\" src=\"./img/nav_home.gif\" width=\"88\" height=\"27\" hspace=\"15\" border=\"0px\"></a>",
+      "failure_summary": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/link-name?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "a53b70ca6487",
+     "rule_id": "link-name",
+     "title": "Links must have discernible text",
+     "criteria": [
+      "2.4.4",
+      "4.1.2"
+     ],
+     "severity": "serious",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "#news > a[onfocus=\"blur();\"]",
+     "evidence": {
+      "html_snippet": "<a href=\"javascript:location.href='news.html';\" onfocus=\"blur();\"><img src=\"./img/nav_news.gif\" name=\"nav_news\" width=\"90\" height=\"21\" hspace=\"12\" border=\"0px\"></a>",
+      "failure_summary": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/link-name?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "24f0548aaa19",
+     "rule_id": "link-name",
+     "title": "Links must have discernible text",
+     "criteria": [
+      "2.4.4",
+      "4.1.2"
+     ],
+     "severity": "serious",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "#tickets > a[onfocus=\"blur();\"]",
+     "evidence": {
+      "html_snippet": "<a href=\"javascript:location.href='tickets.html';\" onfocus=\"blur();\"><img name=\"nav_facts\" src=\"./img/nav_facts.gif\" width=\"105\" height=\"23\" hspace=\"9\" border=\"0px\"></a>",
+      "failure_summary": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/link-name?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "afe8255eee52",
+     "rule_id": "link-name",
+     "title": "Links must have discernible text",
+     "criteria": [
+      "2.4.4",
+      "4.1.2"
+     ],
+     "severity": "serious",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "#survey > a[onfocus=\"blur();\"]",
+     "evidence": {
+      "html_snippet": "<a href=\"javascript:location.href='survey.html';\" onfocus=\"blur();\"><img src=\"./img/nav_survey.gif\" name=\"nav_survey\" width=\"107\" height=\"32\" hspace=\"8\" border=\"0px\"></a>",
+      "failure_summary": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/link-name?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "93553e99ed1b",
+     "rule_id": "link-name",
+     "title": "Links must have discernible text",
+     "criteria": [
+      "2.4.4",
+      "4.1.2"
+     ],
+     "severity": "serious",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": ".story:nth-child(1) > span > a[href$=\"news.html\"][onfocus=\"blur();\"]",
+     "evidence": {
+      "html_snippet": "<a href=\"news.html\" onfocus=\"blur();\"><img src=\"./img/morearrow.gif\" width=\"48\" height=\"10\" alt=\"\" border=\"0\" onmouseover=\"this.src='./img/morearrow_a.gif'\" onmouseout=\"this.src='./img/morearrow.gif'\" style=\"vertical-align: bottom\"></a>",
+      "failure_summary": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/link-name?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "29a466c2894f",
+     "rule_id": "link-name",
+     "title": "Links must have discernible text",
+     "criteria": [
+      "2.4.4",
+      "4.1.2"
+     ],
+     "severity": "serious",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": ".story:nth-child(2) > span > a[href$=\"news.html\"][onfocus=\"blur();\"]",
+     "evidence": {
+      "html_snippet": "<a href=\"news.html\" onfocus=\"blur();\"><img src=\"./img/morearrow.gif\" width=\"48\" height=\"10\" alt=\"\" border=\"0\" onmouseover=\"this.src='./img/morearrow_a.gif'\" onmouseout=\"this.src='./img/morearrow.gif'\" style=\"vertical-align: bottom\"></a>",
+      "failure_summary": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/link-name?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "90e993b6c8cd",
+     "rule_id": "link-name",
+     "title": "Links must have discernible text",
+     "criteria": [
+      "2.4.4",
+      "4.1.2"
+     ],
+     "severity": "serious",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": ".story:nth-child(3) > span > a[href$=\"news.html\"][onfocus=\"blur();\"]",
+     "evidence": {
+      "html_snippet": "<a href=\"news.html\" onfocus=\"blur();\"><img src=\"./img/morearrow.gif\" width=\"48\" height=\"10\" alt=\"\" border=\"0\" onmouseover=\"this.src='./img/morearrow_a.gif'\" onmouseout=\"this.src='./img/morearrow.gif'\" style=\"vertical-align: bottom\"></a>",
+      "failure_summary": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/link-name?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "37e62b12e1d7",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "#logos",
+     "evidence": {
+      "html_snippet": "<p id=\"logos\"><a href=\"https://www.w3.org/\" title=\"W3C Home\"><img alt=\"W3C logo\" src=\"../img/w3c.png\" height=\"48\" width=\"72\"></a><a href=\"https://www.w3.org/WAI/\" title=\"WAI Home\"><img alt=\"Web Accessibility Initiative (WAI) logo\" src=\"../img/wai.png\" height=\"48\"></a></p>",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "e885ce3c5794",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "h1",
+     "evidence": {
+      "html_snippet": "<h1><span class=\"subhead\">Inaccessible Home Page</span><span class=\"hidden\"> -</span> Before and After Demonstration</h1>",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "b2daa24de85e",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": ".subline",
+     "evidence": {
+      "html_snippet": "<p class=\"subline\">Improving a Web site using Web Content Accessibility Guidelines (WCAG) 2.0</p>",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "f5359d231f82",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "#mnav",
+     "evidence": {
+      "html_snippet": "<div id=\"mnav\" class=\"inaccessible\">",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "3b9a5c2f9e8b",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "#startcontent",
+     "evidence": {
+      "html_snippet": "<p class=\"skip\" id=\"startcontent\">Demo starts here</p>",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "50a519552d1c",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "tr[height=\"10px\"]:nth-child(1)",
+     "evidence": {
+      "html_snippet": "<tr height=\"10px\">",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "a13a4c23fbdf",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "td[background=\"./img/border_left.gif\"]",
+     "evidence": {
+      "html_snippet": "<td width=\"10px\" background=\"./img/border_left.gif\"><img src=\"./img/border_left.gif\" width=\"10px\"></td>",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "7044e339901d",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "table[height=\"144px\"]",
+     "evidence": {
+      "html_snippet": "<table width=\"780px\" height=\"144px\" border=\"0px\" cellspacing=\"0px\" cellpadding=\"0px\" bgcolor=\"WHITE\">",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "13f7d30994ca",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "td[bgcolor=\"#E4E4E4\"]",
+     "evidence": {
+      "html_snippet": "<td width=\"155px\" bgcolor=\"#E4E4E4\" valign=\"TOP\">",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "58b05e893a92",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "td[width=\"20px\"]:nth-child(2)",
+     "evidence": {
+      "html_snippet": "<td width=\"20px\"><img src=\"./img/blank_5x5.gif\" width=\"20px\" height=\"5px\"></td>",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "674d5d010f34",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": ".headline",
+     "evidence": {
+      "html_snippet": "<p class=\"headline\">Welcome to CityLights</p>",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "8c2103d033de",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "#main > p:nth-child(2)",
+     "evidence": {
+      "html_snippet": "<p>Citylights is the new portal for visitors and residents. Find out what's on, book tickets, and get the latest news.</p>",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "91ee086b4872",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": ".newsbar:nth-child(2)",
+     "evidence": {
+      "html_snippet": "<div class=\"newsbar\">",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "c63a1de90349",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": ".newsbar:nth-child(4)",
+     "evidence": {
+      "html_snippet": "<div class=\"newsbar\">",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "3ff2abf3b9a8",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": ".subheadline",
+     "evidence": {
+      "html_snippet": "<p class=\"subheadline\">Elsewhere on the Web</p>",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "003fe87ec981",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "p:nth-child(7)",
+     "evidence": {
+      "html_snippet": "<p>",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "c0692269ac0f",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "td[width=\"20px\"]:nth-child(4)",
+     "evidence": {
+      "html_snippet": "<td width=\"20px\"><img src=\"./img/blank_5x5.gif\" width=\"20px\" height=\"5px\"></td>",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "c6d75b63f8d1",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "td[width=\"151px\"][valign=\"TOP\"]",
+     "evidence": {
+      "html_snippet": "<td width=\"151px\" valign=\"TOP\">",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "697b624e69a6",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "table[height=\"17px\"][bgcolor=\"#EDEDED\"][cellpadding=\"0px\"]",
+     "evidence": {
+      "html_snippet": "<table width=\"780px\" height=\"17px\" border=\"0px\" cellspacing=\"0px\" cellpadding=\"0px\" bgcolor=\"#EDEDED\">",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "684b27a202c4",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "td[background=\"./img/border_right.gif\"]",
+     "evidence": {
+      "html_snippet": "<td width=\"10px\" background=\"./img/border_right.gif\"><img src=\"./img/border_right.gif\" width=\"10px\"></td>",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "23ca11df28e1",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "tr[height=\"10px\"]:nth-child(3)",
+     "evidence": {
+      "html_snippet": "<tr height=\"10px\">",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "6e4207991e0a",
+     "rule_id": "region",
+     "title": "All page content should be contained by landmarks",
+     "criteria": [],
+     "severity": "moderate",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "#meta-footer",
+     "evidence": {
+      "html_snippet": "<div id=\"meta-footer\" class=\"meta\">",
+      "failure_summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "328c219e0c73",
+     "rule_id": "select-name",
+     "title": "Select element must have an accessible name",
+     "criteria": [
+      "4.1.2"
+     ],
+     "severity": "critical",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": "select",
+     "evidence": {
+      "html_snippet": "<select onchange=\"location.href = this.value;\">",
+      "failure_summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/select-name?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "8e152046375d",
+     "rule_id": "target-size",
+     "title": "All touch targets must be 24px large, or leave sufficient space",
+     "criteria": [
+      "2.5.8"
+     ],
+     "severity": "serious",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": ".inaccessible > .report[href$=\"home.html\"]",
+     "evidence": {
+      "html_snippet": "<a href=\"./reports/home.html\" class=\"report\"><span class=\"hidden\">Inaccessible Home Page </span> Report</a>",
+      "failure_summary": "Fix any of the following:\n  Target has insufficient size (94px by 20px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 16px instead of at least 24px."
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/target-size?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    },
+    {
+     "id": "1d2990338a76",
+     "rule_id": "target-size",
+     "title": "All touch targets must be 24px large, or leave sufficient space",
+     "criteria": [
+      "2.5.8"
+     ],
+     "severity": "serious",
+     "page_url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+     "selector": ".accessible > .report[href$=\"home.html\"]",
+     "evidence": {
+      "html_snippet": "<a href=\"../after/reports/home.html\" class=\"report\"><span class=\"hidden\">Accessible Home Page </span> Report</a>",
+      "failure_summary": "Fix any of the following:\n  Target has insufficient size (94px by 20px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 16px instead of at least 24px."
+     },
+     "source": "rule",
+     "confidence": 1.0,
+     "help_url": "https://dequeuniversity.com/rules/axe/4.14/target-size?application=axeAPI",
+     "element_key": null,
+     "suggested_fix": null
+    }
+   ],
+   "needs_review": 2,
+   "error": null
+  }
+ ],
+ "coverage": {
+  "axe_version": "4.14.0",
+  "axe_tags": [
+   "wcag2a",
+   "wcag2aa",
+   "wcag21a",
+   "wcag21aa",
+   "wcag22aa",
+   "best-practice"
+  ],
+  "axe_rules_run": 100,
+  "criteria_checked": [
+   "1.1.1",
+   "1.2.1",
+   "1.2.2",
+   "1.3.1",
+   "1.3.4",
+   "1.3.5",
+   "1.4.1",
+   "1.4.2",
+   "1.4.3",
+   "1.4.4",
+   "1.4.12",
+   "2.1.1",
+   "2.2.1",
+   "2.2.2",
+   "2.4.1",
+   "2.4.2",
+   "2.4.4",
+   "2.5.3",
+   "2.5.8",
+   "3.1.1",
+   "3.1.2",
+   "3.3.2",
+   "4.1.2"
+  ],
+  "criteria_not_checked": [
+   "1.2.3",
+   "1.2.4",
+   "1.2.5",
+   "1.3.2",
+   "1.3.3",
+   "1.4.5",
+   "1.4.10",
+   "1.4.11",
+   "1.4.13",
+   "2.1.2",
+   "2.1.4",
+   "2.3.1",
+   "2.4.3",
+   "2.4.5",
+   "2.4.6",
+   "2.4.7",
+   "2.4.11",
+   "2.5.1",
+   "2.5.2",
+   "2.5.4",
+   "2.5.7",
+   "3.2.1",
+   "3.2.2",
+   "3.2.3",
+   "3.2.4",
+   "3.2.6",
+   "3.3.1",
+   "3.3.3",
+   "3.3.4",
+   "3.3.7",
+   "3.3.8",
+   "4.1.3"
+  ],
+  "notes": [
+   "Only rendered pages reachable by same-origin links were audited; content behind logins, forms, or user interaction was not.",
+   "axe-core reports only issues it can determine automatically; 'needs review' items require a human decision.",
+   "Criteria listed as not checked have no automated rule here and need manual testing."
+  ]
+ },
+ "fixes": [],
+ "needs_human": {},
+ "model_usage": {},
+ "disclaimer": "Automated testing finds only part of WCAG issues. This report is not a statement of compliance. It lists what was checked and what was not; test with assistive technology (for example VoiceOver, NVDA, keyboard only) and with disabled users before drawing conclusions."
+}

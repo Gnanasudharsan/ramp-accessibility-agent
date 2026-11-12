@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+/* Design tokens. Light values are the spec; dark values were chosen to keep every text/background
+   pair at WCAG AA or better (checked by scripts/check-contrast.mjs in CI). Status colours never
+   carry meaning alone: they always sit next to an icon and a word. */
+:root {
+  --ink: #171a21;
+  --slate: #525b6b;
+  --paper: #f7f8fa;
+  --surface: #ffffff;
+  --line: #dce0e6;
+  --accent: #2445c6;
+  --pass: #13795b;
+  --fail: #b42318;
+  --warning: #a15c07;
+  --info: #2445c6;
+  --focus: #2445c6;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: #e9ecf1;
+    --slate: #a9b1bf;
+    --paper: #12151b;
+    --surface: #1a1e26;
+    --line: #2f3542;
+    --accent: #9db1ff;
+    --pass: #5fd0a5;
+    --fail: #ff9a8f;
+    --warning: #f2b85c;
+    --info: #9db1ff;
+    --focus: #9db1ff;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --ink: #e9ecf1;
+  --slate: #a9b1bf;
+  --paper: #12151b;
+  --surface: #1a1e26;
+  --line: #2f3542;
+  --accent: #9db1ff;
+  --pass: #5fd0a5;
+  --fail: #ff9a8f;
+  --warning: #f2b85c;
+  --info: #9db1ff;
+  --focus: #9db1ff;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-slate: var(--slate);
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-pass: var(--pass);
+  --color-fail: var(--fail);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --font-sans: var(--font-atkinson), system-ui, sans-serif;
+  --font-mono: var(--font-atkinson-mono), ui-monospace, monospace;
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--paper);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* One focus style everywhere: thick, offset, never removed. */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+a {
+  color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 50;
+  background: var(--surface);
+  color: var(--ink);
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--accent);
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Data tables: readable at 320 px by scrolling inside their own region, never the page. */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+}
+.table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.table-wrap caption {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  color: var(--slate);
+  caption-side: bottom;
+  border-top: 1px solid var(--line);
+  font-size: 0.875rem;
+}
+.table-wrap th,
+.table-wrap td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+.table-wrap thead th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+.table-wrap td.num,
+.table-wrap th.num {
+  text-align: right;
+}
+.table-wrap tbody tr:last-child > * {
+  border-bottom: 0;
+}
