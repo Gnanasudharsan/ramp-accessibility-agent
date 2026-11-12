@@ -20,6 +20,7 @@ from ramp.agent import prompts
 from ramp.agent.collect import ImageCandidate, LinkCandidate, PageEvidence, StructureCandidate
 from ramp.models.llm import LLMError, StructuredLLM, image_part, untrusted_block
 from ramp.report.schema import DetectionSource, Evidence, Issue, Severity
+from ramp.security.guard import scrub
 
 log = logging.getLogger(__name__)
 
@@ -145,6 +146,12 @@ LINK_RULE = ("ramp-link-purpose", ["2.4.4"], Severity.SERIOUS, "Link purpose is 
 FOCUS_RULE = ("ramp-focus-visible", ["2.4.7"], Severity.SERIOUS, "No visible focus indicator")
 
 
+INJECTION_NOTE = (
+    "This element contains text addressed to automated tools (possible prompt injection); "
+    "Ramp treated it as data."
+)
+
+
 def _issue(
     page_url: str,
     rule: str,
@@ -158,6 +165,11 @@ def _issue(
     source: DetectionSource,
     suggestion: str = "",
 ) -> Issue:
+    clean_summary, clean_suggestion = scrub(summary), scrub(suggestion)
+    summary = clean_summary.text
+    if clean_summary.ai_directed or clean_suggestion.ai_directed:
+        summary = f"{summary} {INJECTION_NOTE}".strip()
+    suggestion = "" if clean_suggestion.ai_directed else clean_suggestion.text
     return Issue(
         id=Issue.make_id(page_url, rule, selector),
         rule_id=rule,

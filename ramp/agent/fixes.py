@@ -35,6 +35,7 @@ from ramp.crawler.urls import origin_of
 from ramp.evals.static_server import StaticServer
 from ramp.models.llm import LLMError, StructuredLLM, raw_block, untrusted_block
 from ramp.report.schema import Issue
+from ramp.security.guard import patch_violation, scrub
 
 MIN_SOURCE_SCORE = 4.0  # tag match plus at least one distinctive attribute
 MAX_CHANGED_LINES = 15
@@ -70,18 +71,28 @@ class NeedsHuman(BaseModel):
     reason: str
 
 
-def served_file(page_url: str, repo: Path) -> str | None:
+def local_path(page_url: str, base_path: str = "/") -> str:
+    """URL path relative to the site root: ``/repo/a.html`` under base ``/repo/`` is ``/a.html``."""
+    path = urlsplit(page_url).path or "/"
+    base = "/" + base_path.strip("/") + "/" if base_path.strip("/") else "/"
+    if base != "/" and path.startswith(base):
+        path = "/" + path[len(base) :]
+    elif base != "/" and path == base.rstrip("/"):
+        path = "/"
+    return path
+
+
+def served_file(page_url: str, repo: Path, base_path: str = "/") -> str | None:
     """The repo file served at ``page_url`` when the repo is a static site root."""
-    path = urlsplit(page_url).path.lstrip("/") or "index.html"
+    path = local_path(page_url, base_path).lstrip("/") or "index.html"
     if path.endswith("/"):
         path += "index.html"
     return path if (repo / path).is_file() else None
 
 
-def locate_source(issue: Issue, repo: Path) -> SourceCandidate | None:
-    candidates = map_to_source(
-        issue.evidence.html_snippet, repo, top_k=1, prefer_file=served_file(issue.page_url, repo)
-    )
+def locate_source(issue: Issue, repo: Path, base_path: str = "/") -> SourceCandidate | None:
+    prefer = served_file(issue.page_url, repo, base_path)
+    candidates = map_to_source(issue.evidence.html_snippet, repo, top_k=1, prefer_file=prefer)
     if not candidates or candidates[0].score < MIN_SOURCE_SCORE:
         return None
     return candidates[0]
@@ -100,7 +111,7 @@ def unified_diff(path: str, before: str, after: str) -> str:
 
 
 def validate_patch(source: str, old: str, new: str) -> str | None:
-    """Return a reason the patch is unacceptable, or None."""
+    """Return a reason the patch is unacceptable, or None (shape rules, then security policy)."""
     if old == new:
         return "replacement is identical to the original"
     count = source.count(old)
@@ -115,13 +126,18 @@ def validate_patch(source: str, old: str, new: str) -> str | None:
     )
     if changed > MAX_CHANGED_LINES * 2:
         return f"diff too large ({changed} changed lines)"
-    return None
+    return patch_violation(old, new, source)
 
 
 async def propose_fix(
-    llm: StructuredLLM, issue: Issue, repo: Path, feedback: str | None = None, attempt: int = 1
+    llm: StructuredLLM,
+    issue: Issue,
+    repo: Path,
+    feedback: str | None = None,
+    attempt: int = 1,
+    base_path: str = "/",
 ) -> ProposedFix | NeedsHuman:
-    located = locate_source(issue, repo)
+    located = locate_source(issue, repo, base_path)
     if located is None:
         return NeedsHuman(issue_id=issue.id, reason="could not locate the source of this element")
     source = (repo / located.path).read_text(encoding="utf-8")
@@ -157,6 +173,7 @@ async def propose_fix(
     if old not in source and _unescape(old) in source:  # model echoed JSON-style escapes
         old, new = _unescape(old), _unescape(new)
     problem = validate_patch(source, old, new)
+    explanation = scrub(proposal.explanation, neutral="Explanation withheld by output policy.").text
     if problem is not None:
         return ProposedFix(
             id=f"{issue.id}-{attempt}",
@@ -164,8 +181,8 @@ async def propose_fix(
             file=located.path,
             line=located.line,
             old=old,
-            new=new,
-            explanation=proposal.explanation,
+            new=new,  # kept for the repair prompt; never shown or published (diff is empty)
+            explanation=explanation,
             diff="",
             attempt=attempt,
             status="failed",
@@ -179,7 +196,7 @@ async def propose_fix(
         line=located.line,
         old=old,
         new=new,
-        explanation=proposal.explanation,
+        explanation=explanation,
         diff=unified_diff(located.path, source, patched),
         attempt=attempt,
     )
@@ -209,8 +226,14 @@ class RenderSnapshot(BaseModel):
 async def snapshot(browser: Browser, url: str) -> RenderSnapshot:
     from ramp.checks.probes import CSS_PATH_JS
 
+    # Offline (only this origin) and private allowed: the page is Ramp's own local copy of the site.
     context = await new_readonly_context(
-        browser, "RampA11yBot/verify", (1280, 900), [0], allowed_origins=frozenset({origin_of(url)})
+        browser,
+        "RampA11yBot/verify",
+        (1280, 900),
+        [0],
+        allowed_origins=frozenset({origin_of(url)}),
+        allow_private=True,
     )
     errors: list[str] = []
     try:
@@ -263,9 +286,10 @@ async def verify_fix(
     page_url: str,
     before: RenderSnapshot,
     recheck: Recheck | None = None,
+    base_path: str = "/",
 ) -> ProposedFix:
     """Apply ``fix`` to a copy of ``site_root`` and check it (see module docstring)."""
-    path = urlsplit(page_url).path
+    path = local_path(page_url, base_path)
     with tempfile.TemporaryDirectory() as tmp:
         copy = Path(tmp) / "site"
         shutil.copytree(site_root, copy)
