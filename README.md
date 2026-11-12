@@ -95,8 +95,9 @@ What did not improve, measured in the same run:
   4 pages. No forbidden tool was called and no real finding was suppressed. Phase 4's bar is
   ≥ 95%.
 - **W3C BAD did not move** (F1 0.306 vs 0.314 on W3C annotations; 0.456 vs 0.468 with verified
-  labels). The BAD pages ran last and the vision model's free-tier quota was exhausted: 47 of the
-  run's 53 failed model calls were on BAD, so most judgment checks there were skipped. The two
+  labels). The BAD pages ran last and are image-heavy, and the vision model stayed rate-limited
+  (free tier) through every retry: 47 of the run's 53 failed model calls were on BAD, so most
+  judgment checks there were skipped. The two
   added false positives are model findings on W3C's repaired "after" pages. This is not a
   measurement of the agent's recall on BAD; it is re-run when quota allows.
 - **Latency and tokens.** p50 29.8 s per page; p95 2,625 s, dominated by waiting on the free

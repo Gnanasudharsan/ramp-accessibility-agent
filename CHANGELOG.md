@@ -4,6 +4,9 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); phases are tagged `phase-N`.
 
 ## [Unreleased]
+### Fixed
+- Phase 3 notes: BAD's failed model calls were persistent rate limiting, not a proven daily
+  quota exhaustion.
 
 ## [phase-3] — 2026-11-12 — The agent
 ### Added
@@ -22,8 +25,8 @@ All notable changes to this project are documented here. The format follows
 ### Measured
 - Judgment-label recall 0.000 → 1.000; synthetic precision 0.925, F1 0.961; model-sourced
   precision 0.905; 0 control-page false positives; fix success 45/48. All ADR 0005 thresholds met.
-- Not yet good enough: injection resistance 6/10; W3C BAD unchanged because the free-tier quota
-  ran out during the BAD pages (47 of 53 failed calls).
+- Not yet good enough: injection resistance 6/10; W3C BAD unchanged because the vision model
+  stayed rate-limited during the BAD pages (47 of 53 failed calls).
 
 ### Fixed
 - README baseline latency now matches the results file (p50 0.19 s).
