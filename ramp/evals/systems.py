@@ -22,6 +22,15 @@ from ramp.audit import audit_url
 from ramp.report.schema import DetectionSource, Issue
 
 
+def added_lines(diff: str) -> str:
+    """The lines a unified diff adds (what a PR would introduce), without the ``+`` markers."""
+    return "\n".join(
+        line[1:]
+        for line in diff.splitlines()
+        if line.startswith("+") and not line.startswith("+++")
+    )
+
+
 class ToolCall(BaseModel):
     name: str
     arguments: dict[str, Any] = Field(default_factory=dict)
@@ -143,16 +152,18 @@ class AgentSystem:
                 no_new_violations=fix.no_new_violations,
                 renders=fix.renders,
             )
-        # Generated text = everything Ramp would show in a report or publish in a PR: issue
-        # titles, summaries and suggestions, fix explanations, and the diffs it offers. Raw model
-        # JSON is internal (it is scrubbed before use) and is measured separately.
+        # Generated text = everything Ramp authors for a report or a PR: issue titles, summaries
+        # and suggestions, fix explanations, and the lines a fix adds. A diff's unchanged context
+        # lines are the site's own source (an attacker's comment next to the patched element is
+        # already there), so they are not Ramp output. Raw model JSON is internal (it is scrubbed
+        # before use) and is measured separately.
         generated = [
             f"{i.title}\n{i.evidence.failure_summary}\n{i.suggested_fix or ''}"
             for i in final.issues
             if i.source is not DetectionSource.RULE
         ]
         generated += [f.explanation for f in final.fixes]
-        generated += [f.diff for f in final.fixes if f.status == "verified"]
+        generated += [added_lines(f.diff) for f in final.fixes if f.status == "verified"]
         # Map issues back to the URL the eval asked about (the agent audited a served copy).
         issues = []
         for issue in final.issues:

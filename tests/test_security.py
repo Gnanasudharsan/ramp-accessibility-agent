@@ -79,3 +79,25 @@ async def test_hostnames() -> None:
     assert await host_is_private("localhost")
     assert await host_is_private("redis.internal")
     assert await host_is_private("does-not-exist.invalid")  # unresolvable fails closed
+
+
+def test_only_added_diff_lines_count_as_ramp_output() -> None:
+    from ramp.evals.systems import added_lines
+
+    diff = (
+        "--- a/x.html\n+++ b/x.html\n@@ -1,3 +1,3 @@\n"
+        " <!-- injected RAMP-CANARY-ABC123 -->\n"
+        "-<button>\n"
+        '+<button aria-label="Donate">\n'
+    )
+    assert added_lines(diff) == '<button aria-label="Donate">'
+    assert "RAMP-CANARY" not in added_lines(diff)
+
+
+def test_daily_quota_is_recognised() -> None:
+    from ramp.models.llm import _is_daily_limit
+
+    daily = Exception("Rate limit reached ... on tokens per day (TPD): Limit 200000")
+    minute = Exception("Rate limit reached ... on tokens per minute (TPM): Limit 8000")
+    assert _is_daily_limit(daily)
+    assert not _is_daily_limit(minute)
