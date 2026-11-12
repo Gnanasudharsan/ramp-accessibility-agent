@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Fixture page two</title></head>
+<body>
+<main>
+  <h1>Page two</h1>
+  <form id="f" method="post" action="/submit"><input type="text" name="q"><button>Send</button></form>
+  <script>
+    // A page script that tries to write: the crawler must block it.
+    fetch('/beacon', {method: 'POST', body: 'x'}).catch(() => {});
+  </script>
+  <a href="page3.html">Page three</a>
+</main>
+</body>
+</html>
