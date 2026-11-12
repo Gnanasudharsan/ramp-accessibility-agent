@@ -25,6 +25,7 @@ from ramp.checks.probes import element_boxes
 from ramp.checks.wcag import CRITERIA
 from ramp.config import get_settings
 from ramp.crawler.crawler import CrawlConfig, PageVisit, crawl
+from ramp.crawler.politeness import LimiterFactory
 from ramp.report.schema import AuditReport, BoundingBox, Coverage, PageResult
 
 MAX_CROPS_PER_PAGE = 60
@@ -79,6 +80,7 @@ async def audit_url(
     browser: Browser | None = None,
     offline: bool = False,
     on_progress: Callable[[PageResult], Awaitable[None]] | None = None,
+    limiter_factory: LimiterFactory | None = None,
 ) -> AuditReport:
     """Crawl ``url`` and run axe-core on every page; write artifacts under ``out_dir``.
 
@@ -138,9 +140,13 @@ async def audit_url(
     )
     if browser is None:
         async with launch_browser() as owned:
-            result = await crawl(owned, config, out_dir, on_page=on_page)
+            result = await crawl(
+                owned, config, out_dir, on_page=on_page, limiter_factory=limiter_factory
+            )
     else:
-        result = await crawl(browser, config, out_dir, on_page=on_page)
+        result = await crawl(
+            browser, config, out_dir, on_page=on_page, limiter_factory=limiter_factory
+        )
 
     audited = {p.url for p in pages}
     for visit in result.visits:

@@ -6,10 +6,14 @@ import asyncio
 import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Protocol
 from urllib.parse import urlsplit
 
 import httpx
 from protego import Protego
+
+if TYPE_CHECKING:
+    from redis.asyncio import Redis
 
 
 @dataclass
@@ -87,3 +91,34 @@ class RateLimiter:
                     await result
             self._last[host] = self.clock()
             return waited
+
+
+class HostLimiter(Protocol):
+    async def wait(self, url: str) -> float: ...
+
+
+LimiterFactory = Callable[[float], HostLimiter]
+
+
+class SharedRateLimiter:
+    """At most one request per ``min_interval`` per host across every process sharing ``redis``.
+
+    Per-crawl limiters are not enough behind a public API: two audits of the same site (two
+    users, or two workers) would each send one request per second. Here a host's slot is a Redis
+    key set with NX and a ``min_interval`` expiry; whoever sets it may request, everyone else
+    waits for the key to expire.
+    """
+
+    def __init__(self, redis: Redis, min_interval: float, prefix: str = "ramp:host-slot") -> None:
+        self.redis = redis
+        self.min_interval = min_interval
+        self.prefix = prefix
+
+    async def wait(self, url: str) -> float:
+        key = f"{self.prefix}:{urlsplit(url).netloc}"
+        interval_ms = int(self.min_interval * 1000)
+        started = time.monotonic()
+        while not await self.redis.set(key, "1", nx=True, px=interval_ms):
+            ttl_ms = await self.redis.pttl(key)
+            await asyncio.sleep(max(ttl_ms, 10) / 1000)
+        return time.monotonic() - started

@@ -23,7 +23,7 @@ from pathlib import Path
 import httpx
 from playwright.async_api import Browser, BrowserContext, Page, Route
 
-from ramp.crawler.politeness import RateLimiter, RobotsPolicy
+from ramp.crawler.politeness import LimiterFactory, RateLimiter, RobotsPolicy
 from ramp.crawler.urls import normalize, origin_of, same_origin
 from ramp.security.netpolicy import url_is_private
 
@@ -131,8 +131,12 @@ async def crawl(
     out_dir: Path,
     on_page: PageHook | None = None,
     http_client: httpx.AsyncClient | None = None,
+    limiter_factory: LimiterFactory | None = None,
 ) -> CrawlResult:
-    """Breadth-first crawl from ``config.start_url``; call ``on_page`` while each page is open."""
+    """Breadth-first crawl from ``config.start_url``; call ``on_page`` while each page is open.
+
+    ``limiter_factory`` builds the per-host rate limiter from the interval (default: one per
+    crawl; the API worker passes a Redis-backed one shared by every job)."""
     start = normalize(config.start_url)
     if start is None:
         raise ValueError(f"not an http(s) URL: {config.start_url}")
@@ -149,7 +153,7 @@ async def crawl(
             await client.aclose()
 
     interval = max(config.min_interval, robots.crawl_delay or 0.0, 1.0)
-    limiter = RateLimiter(min_interval=interval)
+    limiter = (limiter_factory or (lambda i: RateLimiter(min_interval=i)))(interval)
     result = CrawlResult()
     blocked = [0]
     allowed = frozenset({origin_of(start)}) if config.offline else None

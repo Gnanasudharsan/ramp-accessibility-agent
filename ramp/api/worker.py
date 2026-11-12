@@ -17,6 +17,7 @@ from arq.connections import RedisSettings
 from ramp.api.store import AuditStore
 from ramp.audit import audit_url, launch_browser
 from ramp.config import get_settings
+from ramp.crawler.politeness import SharedRateLimiter
 from ramp.report.schema import AuditReport, PageResult
 
 
@@ -62,6 +63,8 @@ async def run_audit(ctx: dict[str, Any], audit_id: str, url: str, max_pages: int
                 max_depth=1,
                 browser=ctx["browser"],
                 on_progress=progress,
+                # One request per second per site across all jobs and workers, not per job.
+                limiter_factory=lambda interval: SharedRateLimiter(ctx["redis"], interval),
             )
         summary = summarize(report)
         await store.save_report(audit_id, report.model_dump_json())

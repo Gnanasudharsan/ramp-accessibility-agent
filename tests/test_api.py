@@ -93,12 +93,13 @@ async def test_worker_runs_a_real_audit() -> None:
     from ramp.audit import launch_browser
     from ramp.evals.static_server import StaticServer
 
-    store = AuditStore(FakeAsyncRedis())
+    redis = FakeAsyncRedis()
+    store = AuditStore(redis)
     with StaticServer(FIXTURES / "site") as server:
         url = f"{server.url}/index.html"
         job = await store.create(url, 1)
         async with launch_browser() as browser:
-            ctx = {"store": store, "browser": browser}
+            ctx = {"store": store, "browser": browser, "redis": redis}
             assert await run_audit(ctx, job.id, url, 1) == "done"
     final = await store.get(job.id)
     assert final is not None
@@ -109,3 +110,19 @@ async def test_worker_runs_a_real_audit() -> None:
     assert report["pages"][0]["issues"]
     kinds = [k async for _, k, _ in store.events(job.id)]
     assert kinds == ["queued", "running", "page", "done"]
+
+
+async def test_shared_limiter_spaces_requests_across_independent_crawls() -> None:
+    """Two crawls of one host (separate jobs or workers) share one slot per interval."""
+    import time
+
+    from ramp.crawler.politeness import SharedRateLimiter
+
+    redis = FakeAsyncRedis()
+    a, b = SharedRateLimiter(redis, 0.3), SharedRateLimiter(redis, 0.3)
+    started = time.monotonic()
+    await a.wait("https://example.org/one")
+    await b.wait("https://example.org/two")  # same host: must wait for the slot
+    await b.wait("https://other.example/")  # different host: no wait
+    elapsed = time.monotonic() - started
+    assert 0.28 <= elapsed < 0.6
