@@ -2,6 +2,9 @@
 
 **Finds accessibility barriers on any website, writes the fix, and proves it works.**
 
+Site: **[gnanasudharsan.github.io/ramp-accessibility-agent](https://gnanasudharsan.github.io/ramp-accessibility-agent/)**
+(results, how it works, and a sample report; built from the measured results in this repo).
+
 Ramp crawls a site in a sandboxed browser, runs deterministic WCAG checks with
 [axe-core](https://github.com/dequelabs/axe-core), adds vision-model checks for the issues rule
 engines miss (meaningless alt text, unclear link purpose, text baked into images, focus visibility),
