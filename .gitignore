@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Secrets and local config
+.env
+.env.*
+!.env.example
+
+# Run outputs (small, curated eval summaries are committed explicitly)
+reports/
+runs/
+.ramp/
+evals/results/raw/
+*.sqlite
+*.db
+checkpoints/
+
+# Models and datasets: weights go to Hugging Face Hub, never git
+*.safetensors
+*.gguf
+*.bin
+*.npz
+training/data/
+training/adapters/
+training/out/
+mlruns/
+mlartifacts/
+
+# Node / web
+node_modules/
+web/.next/
+web/out/
+web/node_modules/
+*.tsbuildinfo
+next-env.d.ts
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/

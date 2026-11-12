@@ -1,0 +1,68 @@
+[project]
+name = "ramp-a11y"
+version = "0.0.0"
+description = "Agentic accessibility auditor: finds WCAG barriers, writes fixes, verifies them, and opens PRs with human approval."
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Gnanasudharsan Ashokumar" }]
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "pydantic>=2.14,<3",
+    "pydantic-settings>=2.16",
+    "typer>=0.29",
+    "rich>=14",
+    "httpx>=0.28",
+    "fastapi>=0.162",
+    "uvicorn[standard]>=0.54",
+    "sse-starlette>=3.7",
+    "arq>=0.28",
+    "redis>=5,<7",
+]
+
+[project.scripts]
+ramp = "ramp.cli:app"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.17",
+    "mypy>=2.4",
+    "pytest>=9.2",
+    "pytest-asyncio>=1.0",
+    "pre-commit>=4",
+]
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["ramp"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["web", "benchmark/pages"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "C4", "SIM", "RUF", "S", "ASYNC", "PT"]
+ignore = ["S101"]  # assert is fine in tests
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S", "PT011"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+packages = ["ramp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+filterwarnings = ["ignore::DeprecationWarning:fastapi.testclient", "ignore:Using `httpx` with `starlette.testclient`"]
+markers = [
+    "integration: needs a browser, network, or running services (deselected in fast CI)",
+    "llm: calls a real model provider",
+]
+addopts = "-m 'not integration and not llm'"
