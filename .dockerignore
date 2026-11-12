@@ -1,0 +1,10 @@
+.git
+.venv
+web
+training
+benchmark
+docs
+evals/results
+**/__pycache__
+.env
+*.safetensors
