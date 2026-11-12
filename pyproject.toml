@@ -38,6 +38,10 @@ dev = [
     "pytest-asyncio>=1.0",
     "pre-commit>=4",
 ]
+training = [
+    "mlflow>=3",
+    "mlx-vlm>=0.7.12 ; platform_machine == 'arm64' and sys_platform == 'darwin'",
+]
 
 [build-system]
 requires = ["hatchling>=1.27"]
@@ -61,6 +65,7 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S", "PT011"]
 "benchmark/build_benchmark.py" = ["E501"]  # page specs are long HTML strings
+"training/**" = ["S311"]  # seeded RNG for reproducible data splits, not cryptography
 
 [tool.mypy]
 python_version = "3.12"
