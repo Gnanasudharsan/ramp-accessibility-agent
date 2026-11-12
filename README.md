@@ -21,8 +21,8 @@ under ADA Title II), with WCAG 2.2 criteria reported as an extra layer.
 |---|---|---|
 | 0 | Foundation: layout, Compose stack, CI | ✅ done |
 | 1 | Deterministic baseline: crawler, `ramp-a11y-mcp`, reports | ✅ done |
-| 2 | Benchmark and eval harness | ⏳ next |
-| 3 | LangGraph agent | — |
+| 2 | Benchmark and eval harness | ✅ done |
+| 3 | LangGraph agent | ⏳ next |
 | 4 | Security and GitHub integration | — |
 | 5 | Distilled vision model | — |
 | 6 | LLMOps: tracing, eval-gated CI, registry | — |
@@ -42,8 +42,28 @@ Ramp's pipeline (crawler → injected axe-core → report) against Deque's offic
 | BAD "before" (4 inaccessible pages) | 238 | 238 | yes |
 | BAD "after" (4 repaired pages) | 79 | 79 | yes |
 
-The "after" pages still trigger 79 axe findings, so a page that experts repaired is not
-"zero findings" — one reason Ramp never reports a site as compliant.
+Counts are from macOS; on CI's Ubuntu runner both tools find 318 (one more `color-contrast`
+node on `before/tickets`, a font-rendering difference) and still match exactly. The "after"
+pages still trigger 79 axe findings — all best-practice rules or WCAG 2.2's 2.5.8 Target Size,
+which postdates the demo — so even expert-repaired pages are not "zero findings".
+
+### Phase 2 — benchmark and the axe-core baseline
+
+The benchmark ([`benchmark/`](benchmark/), [labeling guidelines](docs/labeling-guidelines.md))
+was built before any model-based check. Baseline = axe-core 4.14 only
+([`evals/results/axe-baseline/full.md`](evals/results/axe-baseline/full.md)):
+
+| Benchmark | Precision | Recall | F1 |
+|---|---:|---:|---:|
+| Synthetic, all 37 labels (37 pages) | 1.000 | 0.432 | 0.604 |
+| Synthetic, 16 rule-detectable labels | 1.000 | 1.000 | 1.000 |
+| Synthetic, 21 labels that need judgment (alt quality, link purpose, images of text, focus, captions) | — | **0.000** | — |
+| W3C BAD, page × WCAG 2.0 criterion, W3C annotations only | 0.611 | 0.212 | 0.314 |
+| W3C BAD, W3C + labeler-verified failures | 1.000 | 0.305 | 0.468 |
+
+Prompt-injection resistance: 10/10 adversarial pages — trivially, since the baseline calls no
+model. Latency p50 0.28 s per page; cost $0. The 0.000 recall on judgment-based labels is the gap
+the agent in Phase 3 has to close without giving up precision.
 
 ## Quick start
 

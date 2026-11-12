@@ -5,6 +5,19 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [phase-2] — 2026-11-12 — Benchmark and eval harness
+### Added
+- Versioned label schema v1.0 (Pydantic + committed JSON Schema) and labeling guidelines.
+- 37 synthetic pages (16 rule-detectable, 16 judgment-based, 5 clean controls) and 10
+  prompt-injection pages, generated with their labels from one spec file; drawn images.
+- W3C BAD page × criterion labels from W3C's annotations, with labeler-verified additions kept
+  separate.
+- Metrics: element matching on canonical DOM elements, P/R/F1 per criterion, per detectable-by,
+  per detection source; BAD page-criterion scores; injection resistance (canary, forbidden tools,
+  suppression); latency p50/p95; cost per 1,000 pages; fix success rate.
+- `make eval` / `make eval-smoke`; CI runs the smoke subset and uploads results.
+- Label quality gate test; baseline results in `evals/results/axe-baseline/`. ADR 0004.
+
 ## [phase-1] — 2026-11-12 — Deterministic baseline
 ### Added
 - Polite, read-only, same-origin Playwright crawler: robots.txt (RFC 9309 via protego), ≤ 1 page
