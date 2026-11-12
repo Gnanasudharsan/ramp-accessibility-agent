@@ -203,7 +203,7 @@ class VisionChecker:
         ]
         try:
             return await self.vision.complete(
-                system=self._system("image_alt"), user=user, schema=ImageJudgment
+                system=self._system("image_alt"), user=user, schema=ImageJudgment, max_tokens=500
             )
         except LLMError as exc:
             log.warning("image judgment failed: %s", exc)
@@ -228,6 +228,7 @@ class VisionChecker:
                 system=self._system("link_purpose"),
                 user="Judge these links.\n" + untrusted_block("page_data", data),
                 schema=LinkJudgments,
+                max_tokens=400 + 120 * len(links),
             )
         except LLMError as exc:
             log.warning("link judgment failed: %s", exc)
@@ -249,7 +250,10 @@ class VisionChecker:
         user = [{"type": "text", "text": prompt}, image_part(screenshot, max_side=1024)]
         try:
             result = await self.vision.complete(
-                system=self._system("structure"), user=user, schema=StructureJudgments
+                system=self._system("structure"),
+                user=user,
+                schema=StructureJudgments,
+                max_tokens=200 + 160 * len(candidates),
             )
         except LLMError as exc:
             log.warning("structure judgment failed: %s", exc)

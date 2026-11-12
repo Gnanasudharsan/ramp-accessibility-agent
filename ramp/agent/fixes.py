@@ -148,7 +148,9 @@ async def propose_fix(
         user += f"\nA previous attempt failed verification: {feedback}. Try a different fix."
     system = f"{prompts.load('preamble')}\n\n{prompts.load('fix')}"
     try:
-        proposal = await llm.complete(system=system, user=user, schema=FixProposalLLM)
+        proposal = await llm.complete(
+            system=system, user=user, schema=FixProposalLLM, max_tokens=900
+        )
     except LLMError as exc:
         return NeedsHuman(issue_id=issue.id, reason=f"fix generation failed: {exc}")
     old, new = proposal.old, proposal.new

@@ -138,7 +138,9 @@ class StructuredLLM:
         )
         return hashlib.sha256(blob.encode()).hexdigest()
 
-    async def _call(self, messages: list[dict[str, Any]], schema: type[BaseModel]) -> Any:
+    async def _call(
+        self, messages: list[dict[str, Any]], schema: type[BaseModel], max_tokens: int
+    ) -> Any:
         response_format = {
             "type": "json_schema",
             "json_schema": {"name": schema.__name__, "schema": schema.model_json_schema()},
@@ -150,7 +152,7 @@ class StructuredLLM:
                         model=self.model,
                         messages=messages,
                         temperature=0,
-                        max_tokens=2048,
+                        max_tokens=max_tokens,
                         response_format=response_format,
                     )
             except BadRequestError as exc:
@@ -177,8 +179,15 @@ class StructuredLLM:
         raise LLMError(f"{self.model} did not answer after retries")
 
     async def complete(
-        self, *, system: str, user: list[dict[str, Any]] | str, schema: type[T]
+        self,
+        *,
+        system: str,
+        user: list[dict[str, Any]] | str,
+        schema: type[T],
+        max_tokens: int = 700,
     ) -> T:
+        """``max_tokens`` should fit the expected answer: free tiers reserve it against the
+        tokens-per-minute budget before the model writes a word."""
         content = [{"type": "text", "text": user}] if isinstance(user, str) else user
         messages: list[dict[str, Any]] = [
             {"role": "system", "content": system},
@@ -195,7 +204,7 @@ class StructuredLLM:
                         f"{last_error[:500]}. Reply again with JSON only.",
                     },
                 ]
-            text, usage, latency = await self._cached_completion(messages, schema)
+            text, usage, latency = await self._cached_completion(messages, schema, max_tokens)
             self._account(usage, latency, text)
             try:
                 return schema.model_validate_json(_extract_json(text))
@@ -205,7 +214,7 @@ class StructuredLLM:
         raise LLMError(f"{self.model} did not return valid {schema.__name__}: {last_error[:300]}")
 
     async def _cached_completion(
-        self, messages: list[dict[str, Any]], schema: type[BaseModel]
+        self, messages: list[dict[str, Any]], schema: type[BaseModel], max_tokens: int
     ) -> tuple[str, dict[str, int], float]:
         key = self._key(messages, schema)
         path = self.cache_dir / key[:2] / f"{key}.json"
@@ -215,7 +224,7 @@ class StructuredLLM:
             self.transcript.usage.replayed_latency_s += entry["latency_s"]
             return entry["text"], entry["usage"], entry["latency_s"]
         started = time.perf_counter()
-        response = await self._call(messages, schema)
+        response = await self._call(messages, schema, max_tokens)
         latency = time.perf_counter() - started
         text = response.choices[0].message.content or ""
         usage = {

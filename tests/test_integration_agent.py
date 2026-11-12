@@ -29,7 +29,9 @@ class FakeLLM:
     def __init__(self, transcript: Transcript) -> None:
         self.transcript = transcript
 
-    async def complete(self, *, system: str, user: Any, schema: type[BaseModel]) -> BaseModel:
+    async def complete(
+        self, *, system: str, user: Any, schema: type[BaseModel], **_: Any
+    ) -> BaseModel:
         self.transcript.usage.calls += 1
         if schema is ImageJudgment:
             reply: BaseModel = ImageJudgment(
