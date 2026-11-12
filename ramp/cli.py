@@ -85,6 +85,9 @@ def agent(
     max_depth: Annotated[int, typer.Option(min=0, max=5)] = 1,
     thread: Annotated[str | None, typer.Option(help="Checkpoint thread id (to resume).")] = None,
     review: Annotated[str, typer.Option(help="interrupt | auto_reject")] = "interrupt",
+    github_repo: Annotated[str | None, typer.Option(help="owner/name to open a PR on.")] = None,
+    base_path: Annotated[str, typer.Option(help="URL prefix the repo is served under.")] = "/",
+    base_branch: Annotated[str, typer.Option(help="Branch the PR targets.")] = "main",
 ) -> None:
     """Run the full agent: rule + vision checks, verified fixes, then wait for your approval."""
     from ramp.agent.graph import AuditState
@@ -98,6 +101,9 @@ def agent(
         max_pages=max_pages,
         max_depth=max_depth,
         review_mode="auto_reject" if review == "auto_reject" else "interrupt",
+        github_repo=github_repo,
+        site_base_path=base_path,
+        base_branch=base_branch,
     )
     from ramp.agent.run import start_audit
 

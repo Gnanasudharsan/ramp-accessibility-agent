@@ -15,10 +15,10 @@ node can do.
 from __future__ import annotations
 
 import logging
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Literal
-from urllib.parse import urlsplit
 
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, START, StateGraph
@@ -32,6 +32,7 @@ from ramp.agent.fixes import (
     ProposedFix,
     RenderSnapshot,
     is_axe_issue,
+    local_path,
     propose_fix,
     snapshot,
     verify_fix,
@@ -89,6 +90,9 @@ class AuditState(BaseModel):
     offline: bool = False
     review_mode: Literal["interrupt", "auto_reject", "auto_approve"] = "interrupt"
     max_fixes: int = 40
+    site_base_path: str = "/"  # URL prefix the repo is served under, e.g. "/my-repo/" on Pages
+    github_repo: str | None = None  # "owner/name" to open a PR on after approval
+    base_branch: str = "main"
     # progress
     plan: dict[str, Any] = Field(default_factory=dict)
     pages: list[PageResult] = Field(default_factory=list)
@@ -346,7 +350,14 @@ async def generate_fixes(state: AuditState, config: RunnableConfig) -> dict[str,
             _use("generate_fixes", "llm.text", issue.id),
         ]
         feedback = last.failure if last is not None else None
-        result = await propose_fix(text, issue, repo, feedback=feedback, attempt=attempts + 1)
+        result = await propose_fix(
+            text,
+            issue,
+            repo,
+            feedback=feedback,
+            attempt=attempts + 1,
+            base_path=state.site_base_path,
+        )
         if isinstance(result, NeedsHuman):
             needs_human.append(result)
         else:
@@ -390,7 +401,7 @@ async def verify_fixes(state: AuditState, config: RunnableConfig) -> dict[str, A
             updated.append(fix)
             continue
         issue = by_id[fix.issue_id]
-        path = urlsplit(issue.page_url).path
+        path = local_path(issue.page_url, state.site_base_path)
         if path not in befores:
             with StaticServer(site_root) as server:
                 uses.append(_use("verify_fixes", "browser.navigate", path))
@@ -404,6 +415,7 @@ async def verify_fixes(state: AuditState, config: RunnableConfig) -> dict[str, A
             issue.page_url,
             befores[path],
             recheck=None if is_axe_issue(issue) else recheck,
+            base_path=state.site_base_path,
         )
         updated.append(checked)
     return {"fixes": updated, "transcript": rt.transcript, "tool_uses": uses}
@@ -443,14 +455,117 @@ async def human_review(state: AuditState) -> dict[str, Any]:
     return {"approved_fix_ids": [f.id for f in verified if approve_all or f.id in approved]}
 
 
-async def open_pr(state: AuditState) -> dict[str, Any]:
-    """Phase 3: write the approved, verified diffs as one patch. Phase 4 opens the GitHub PR."""
-    approved = [f for f in state.fixes if f.id in set(state.approved_fix_ids)]
+async def open_pr(state: AuditState, config: RunnableConfig) -> dict[str, Any]:
+    """Publish approved, verified diffs: a GitHub PR when a repo and token are configured,
+    otherwise a patch file. Both paths contain only what the human approved."""
+    approved_ids = set(state.approved_fix_ids)
+    approved = [f for f in state.fixes if f.id in approved_ids and f.status == "verified"]
     if not approved:
         return {"pr": {"status": "nothing_approved"}}
     patch = Path(state.out_dir) / "ramp-fixes.patch"
     patch.write_text("".join(f.diff for f in approved), encoding="utf-8")
-    return {"pr": {"status": "patch_written", "patch": str(patch), "fixes": len(approved)}}
+    result: dict[str, Any] = {
+        "status": "patch_written",
+        "patch": str(patch),
+        "fixes": len(approved),
+    }
+    token = os.environ.get("GITHUB_PERSONAL_ACCESS_TOKEN") or os.environ.get("GITHUB_TOKEN")
+    if state.github_repo is None or state.repo_path is None:
+        return {"pr": result}
+    if not token:
+        return {"pr": {**result, "github": "skipped: no GITHUB_PERSONAL_ACCESS_TOKEN"}}
+
+    from ramp.github.publish import ApprovedFix, open_pull_request
+
+    rt = _runtime(config)
+    by_id = {i.id: i for i in state.issues}
+    owner, name = state.github_repo.split("/", 1)
+    fixes = [
+        ApprovedFix(
+            id=f.id,
+            file=f.file,
+            old=f.old,
+            new=f.new,
+            explanation=f.explanation,
+            issue_title=by_id[f.issue_id].title,
+            criteria=by_id[f.issue_id].criteria,
+            page_path=local_path(by_id[f.issue_id].page_url, state.site_base_path),
+            visual_diff_ratio=f.visual_diff_ratio,
+        )
+        for f in approved
+    ]
+    uses = [*state.tool_uses]
+    for tool in ("github.create_branch", "github.commit", "github.open_pr"):
+        uses.append(_use("open_pr", tool, state.github_repo))
+
+    async def verify_combined(copy: Path, applied: list[Any]) -> tuple[dict[str, Any], Any]:
+        return await verify_all(
+            rt.browser,
+            Path(state.repo_path or "."),
+            copy,
+            applied,
+            by_id,
+            fixes_by_id={f.id: f for f in approved},
+        )
+
+    outcome = await open_pull_request(
+        token=token,
+        owner=owner,
+        repo=name,
+        base=state.base_branch,
+        site_root=Path(state.repo_path),
+        fixes=fixes,
+        verify_combined=verify_combined,
+        not_checked=(state.coverage.criteria_not_checked if state.coverage else []),
+    )
+    return {"pr": {**result, "github": outcome}, "tool_uses": uses}
+
+
+async def verify_all(
+    browser: Browser,
+    original: Path,
+    patched: Path,
+    applied: list[Any],
+    issues: dict[str, Issue],
+    fixes_by_id: dict[str, ProposedFix],
+) -> tuple[dict[str, Any], dict[str, tuple[bytes, bytes]]]:
+    """Re-verify every approved fix applied together; return results and before/after shots."""
+    pages = sorted({fix.page_path for fix in applied})
+    remaining, new_rules, renders = 0, set(), True
+    shots: dict[str, tuple[bytes, bytes]] = {}
+    with StaticServer(original) as before_server, StaticServer(patched) as after_server:
+        for page in pages:
+            before = await snapshot(browser, f"{before_server.url}{page}")
+            after = await snapshot(browser, f"{after_server.url}{page}")
+            renders = renders and after.status == 200 and not after.errors
+            new_rules |= {
+                r for r, n in after.rule_counts.items() if n > before.rule_counts.get(r, 0)
+            }
+            for fix in applied:
+                issue = issues[fixes_by_id[fix.id].issue_id]
+                key = issue.element_key or issue.selector
+                if (
+                    fix.page_path == page
+                    and is_axe_issue(issue)
+                    and (issue.rule_id, key) in after.rule_keys
+                ):
+                    remaining += 1
+            shots[page] = (_thumbnail(before.screenshot), _thumbnail(after.screenshot))
+    combined = {"remaining": remaining, "new_violations": sorted(new_rules), "renders": renders}
+    return combined, shots
+
+
+def _thumbnail(png: bytes, width: int = 900) -> bytes:
+    import io
+
+    from PIL import Image
+
+    with Image.open(io.BytesIO(png)) as image:
+        img = image.convert("RGB")
+    img.thumbnail((width, 2400))
+    buf = io.BytesIO()
+    img.save(buf, format="PNG", optimize=True)
+    return buf.getvalue()
 
 
 def build_graph() -> StateGraph[AuditState]:
