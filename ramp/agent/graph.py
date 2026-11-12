@@ -325,6 +325,14 @@ def _attempts(state: AuditState, issue_id: str) -> int:
     return sum(1 for f in state.fixes if f.issue_id == issue_id)
 
 
+def fix_budget(state: AuditState) -> list[Issue]:
+    """The issues this audit may try to fix: the first ``max_fixes`` by priority, fixed once.
+
+    The budget is a set, not a sliding window over unfinished issues; a window would move on
+    to new issues every time some were verified, and the repair loop would never end."""
+    return [i for i in state.issues if i.criteria][: state.max_fixes]
+
+
 async def generate_fixes(state: AuditState, config: RunnableConfig) -> dict[str, Any]:
     if not state.plan.get("fixes") or state.repo_path is None:
         return {}
@@ -334,7 +342,7 @@ async def generate_fixes(state: AuditState, config: RunnableConfig) -> dict[str,
     fixes, needs_human = list(state.fixes), list(state.needs_human)
     uses = [*state.tool_uses]
     done = {f.issue_id for f in fixes if f.status == "verified"} | {n.issue_id for n in needs_human}
-    targets = [i for i in state.issues if i.criteria and i.id not in done][: state.max_fixes]
+    targets = [i for i in fix_budget(state) if i.id not in done]
     for issue in targets:
         attempts = _attempts(state, issue.id)
         last = next((f for f in reversed(fixes) if f.issue_id == issue.id), None)
@@ -424,8 +432,10 @@ async def verify_fixes(state: AuditState, config: RunnableConfig) -> dict[str, A
 def after_verify(state: AuditState) -> str:
     """Loop back to repair while some issue's latest fix failed and attempts remain."""
     latest: dict[str, ProposedFix] = {}
+    budget = {i.id for i in fix_budget(state)}
     for fix in state.fixes:
-        latest[fix.issue_id] = fix
+        if fix.issue_id in budget:
+            latest[fix.issue_id] = fix
     retry = any(
         f.status == "failed" and _attempts(state, issue_id) < MAX_FIX_ATTEMPTS
         for issue_id, f in latest.items()

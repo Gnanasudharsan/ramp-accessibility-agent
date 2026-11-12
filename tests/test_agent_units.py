@@ -5,7 +5,14 @@ from pydantic import BaseModel
 
 from ramp.agent.collect import LinkCandidate, PageEvidence, StructureCandidate
 from ramp.agent.fixes import ProposedFix, validate_patch
-from ramp.agent.graph import AuditState, _use, after_verify, human_review, merge_and_dedupe
+from ramp.agent.graph import (
+    AuditState,
+    _use,
+    after_verify,
+    fix_budget,
+    human_review,
+    merge_and_dedupe,
+)
 from ramp.agent.vision import (
     LinkJudgment,
     LinkJudgments,
@@ -72,14 +79,30 @@ def _fix(issue_id: str, status: str, attempt: int) -> ProposedFix:
 
 
 def test_repair_loop_stops_after_two_attempts() -> None:
-    once = AuditState(url="u", out_dir="o", fixes=[_fix("x", "failed", 1)])
-    assert after_verify(once) == "generate_fixes"
-    twice = AuditState(url="u", out_dir="o", fixes=[_fix("x", "failed", 1), _fix("x", "failed", 2)])
-    assert after_verify(twice) == "human_review"
-    fixed = AuditState(
-        url="u", out_dir="o", fixes=[_fix("x", "failed", 1), _fix("x", "verified", 2)]
+    issue = _issue("image-alt", ["1.1.1"], DetectionSource.RULE)
+    x = issue.id
+
+    def state(*fixes: ProposedFix) -> AuditState:
+        return AuditState(url="u", out_dir="o", issues=[issue], fixes=list(fixes))
+
+    assert after_verify(state(_fix(x, "failed", 1))) == "generate_fixes"
+    assert after_verify(state(_fix(x, "failed", 1), _fix(x, "failed", 2))) == "human_review"
+    assert after_verify(state(_fix(x, "failed", 1), _fix(x, "verified", 2))) == "human_review"
+
+
+def test_fix_budget_is_fixed_not_a_sliding_window() -> None:
+    """Regression: a window over unfinished issues moved on whenever fixes were verified, so
+    the repair loop kept finding new work and hit LangGraph's step limit on a real site."""
+    issues = [_issue("image-alt", ["1.1.1"], DetectionSource.RULE, key=f"#i{n}") for n in range(5)]
+    first = AuditState(url="u", out_dir="o", issues=issues, max_fixes=3)
+    budget = [i.id for i in fix_budget(first)]
+    assert budget == [i.id for i in issues[:3]]
+    done = first.model_copy(update={"fixes": [_fix(i, "verified", 1) for i in budget]})
+    assert [i.id for i in fix_budget(done)] == budget  # verifying fixes does not admit more
+    exhausted = first.model_copy(
+        update={"fixes": [_fix(i, "failed", a) for i in budget for a in (1, 2)]}
     )
-    assert after_verify(fixed) == "human_review"
+    assert after_verify(exhausted) == "human_review"  # issues 4 and 5 are out of budget
 
 
 async def test_review_modes_never_approve_unverified() -> None:
