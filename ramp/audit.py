@@ -5,7 +5,7 @@ This is the Phase 1 baseline the agent is measured against. It makes no model ca
 
 from __future__ import annotations
 
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime
 from pathlib import Path
@@ -23,6 +23,7 @@ from ramp.checks.axe import (
 )
 from ramp.checks.probes import element_boxes
 from ramp.checks.wcag import CRITERIA
+from ramp.config import get_settings
 from ramp.crawler.crawler import CrawlConfig, PageVisit, crawl
 from ramp.report.schema import AuditReport, BoundingBox, Coverage, PageResult
 
@@ -39,9 +40,16 @@ COVERAGE_NOTES = [
 
 
 @asynccontextmanager
-async def launch_browser() -> AsyncIterator[Browser]:
+async def launch_browser(ws_endpoint: str | None = None) -> AsyncIterator[Browser]:
+    """A local headless Chromium, or a remote one when ``ws_endpoint`` (or ``RAMP_BROWSER_WS``)
+    is set: in Docker Compose the worker drives the browser in the sandbox container instead of
+    running one itself (ADR 0006)."""
+    endpoint = ws_endpoint or get_settings().browser_ws
     async with async_playwright() as pw:
-        browser = await pw.chromium.launch(headless=True)
+        if endpoint:
+            browser = await pw.chromium.connect(endpoint)
+        else:
+            browser = await pw.chromium.launch(headless=True)
         try:
             yield browser
         finally:
@@ -70,8 +78,11 @@ async def audit_url(
     max_depth: int = 2,
     browser: Browser | None = None,
     offline: bool = False,
+    on_progress: Callable[[PageResult], Awaitable[None]] | None = None,
 ) -> AuditReport:
-    """Crawl ``url`` and run axe-core on every page; write artifacts under ``out_dir``."""
+    """Crawl ``url`` and run axe-core on every page; write artifacts under ``out_dir``.
+
+    ``on_progress`` is awaited after each page is audited (the API streams it as an event)."""
     started = datetime.now(UTC)
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "evidence").mkdir(exist_ok=True)
@@ -115,6 +126,8 @@ async def audit_url(
                 needs_review=sum(len(r.nodes) for r in results.incomplete),
             )
         )
+        if on_progress is not None:
+            await on_progress(pages[-1])
 
     config = CrawlConfig(
         start_url=url,

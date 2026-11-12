@@ -23,6 +23,7 @@ class Settings(BaseSettings):
 
     # Infrastructure.
     redis_url: str = "redis://localhost:6379/1"
+    browser_ws: str | None = None  # Playwright server in the sandbox container (Compose)
 
     # Models (LiteLLM model strings, e.g. "groq/<model>" or "gemini/<model>"). See ADR 0005.
     vision_model: str = "groq/qwen/qwen3.8-27b"
@@ -36,6 +37,14 @@ class Settings(BaseSettings):
     price_input_per_mtok: float = 0.0
     price_output_per_mtok: float = 0.0
     demo_mode: bool = False
+
+    # Public API (demo backend). Audits are deterministic (axe-core) and capped.
+    api_cors_origins: list[str] = [
+        "https://gnanasudharsan.github.io",
+        "http://localhost:3000",
+    ]
+    api_max_pages: int = Field(default=5, ge=1, le=50)
+    api_audits_per_hour: int = Field(default=10, ge=1)
 
 
 @lru_cache(maxsize=1)

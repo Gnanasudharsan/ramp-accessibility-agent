@@ -37,6 +37,7 @@ dev = [
     "pytest>=9.2",
     "pytest-asyncio>=1.0",
     "pre-commit>=4",
+    "fakeredis>=2.26",
 ]
 training = [
     "mlflow>=3",
