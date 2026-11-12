@@ -25,6 +25,7 @@ dependencies = [
     "litellm>=1.109",
     "langgraph>=1.2",
     "langgraph-checkpoint-sqlite>=3.1",
+    "langfuse>=5.0.4,<5.1",
 ]
 
 [project.scripts]

@@ -148,6 +148,14 @@ services:
     environment:
       <<: *langfuse-env
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-change-me-nextauth}
+      # Headless setup: a "ramp" project whose API keys are the ones in .env, so tracing works
+      # without clicking through the UI. Keys are local-only random values (make langfuse-keys).
+      LANGFUSE_INIT_ORG_ID: ramp
+      LANGFUSE_INIT_ORG_NAME: Ramp
+      LANGFUSE_INIT_PROJECT_ID: ramp
+      LANGFUSE_INIT_PROJECT_NAME: ramp
+      LANGFUSE_INIT_PROJECT_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_INIT_PROJECT_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
       LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: http://localhost:9090
       LANGFUSE_S3_MEDIA_UPLOAD_INTERNAL_ENDPOINT: http://minio:9000
 

@@ -12,6 +12,7 @@ from langgraph.types import Command
 from playwright.async_api import Browser
 
 from ramp.agent.graph import AgentRuntime, AuditState, build_graph
+from ramp.observability import audit_trace
 
 DEFAULT_DB = Path(".ramp/checkpoints.sqlite")
 
@@ -64,7 +65,10 @@ async def _invoke(
         saver.serde = JsonPlusSerializer(allowed_msgpack_modules=STATE_TYPES)
         graph = build_graph().compile(checkpointer=saver)
         config = _config(thread_id, AgentRuntime(browser=browser))
-        raw = await graph.ainvoke(payload, config)
+        phase = "resume" if isinstance(payload, Command) else "audit"
+        target = payload.url if isinstance(payload, AuditState) else None
+        with audit_trace(f"ramp-{phase}", thread_id=thread_id, url=target):
+            raw = await graph.ainvoke(payload, config)
         snapshot = await graph.aget_state(config)
     pending = raw.get("__interrupt__") if isinstance(raw, dict) else None
     state = AuditState.model_validate(snapshot.values)

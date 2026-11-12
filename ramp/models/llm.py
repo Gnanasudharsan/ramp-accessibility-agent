@@ -39,6 +39,7 @@ from PIL import Image
 from pydantic import BaseModel, Field, ValidationError
 
 from ramp.config import get_settings
+from ramp.observability import generation, prompt_hash
 from ramp.security.guard import leaked, new_prompt_canary
 
 log = logging.getLogger(__name__)
@@ -210,6 +211,52 @@ class StructuredLLM:
     ) -> T:
         """``max_tokens`` should fit the expected answer: free tiers reserve it against the
         tokens-per-minute budget before the model writes a word."""
+        before = self.transcript.usage.model_copy()
+        traced_input: list[dict[str, Any]] = [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ]
+        with generation(
+            schema.__name__,
+            self.model,
+            traced_input,
+            prompt_hash=prompt_hash(system),
+            max_tokens=max_tokens,
+        ) as span:
+            try:
+                result = await self._complete(system, user, schema, max_tokens)
+            except LLMError as exc:
+                span.update(level="ERROR", status_message=str(exc), metadata=self._delta(before))
+                raise
+            span.update(
+                output=result.model_dump(mode="json"),
+                usage_details=self._tokens(before),
+                metadata=self._delta(before),
+            )
+            return result
+
+    def _tokens(self, before: Usage) -> dict[str, int]:
+        u = self.transcript.usage
+        return {
+            "input": u.prompt_tokens - before.prompt_tokens,
+            "output": u.completion_tokens - before.completion_tokens,
+        }
+
+    def _delta(self, before: Usage) -> dict[str, Any]:
+        u = self.transcript.usage
+        return {
+            "attempts": u.calls - before.calls,
+            "cache_hit": u.cache_hits > before.cache_hits,
+            "rate_limit_wait_s": round(u.rate_limit_wait_s - before.rate_limit_wait_s, 2),
+        }
+
+    async def _complete(
+        self,
+        system: str,
+        user: list[dict[str, Any]] | str,
+        schema: type[T],
+        max_tokens: int,
+    ) -> T:
         content = [{"type": "text", "text": user}] if isinstance(user, str) else user
         # A fresh canary per call: if it ever shows up in a reply, the model was steered into
         # leaking its instructions. It is excluded from the cache key (see _cached_completion).
