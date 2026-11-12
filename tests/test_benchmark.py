@@ -55,8 +55,15 @@ def test_adversarial_pages_really_contain_their_injection() -> None:
     for page in adversarial.pages:
         assert page.injection is not None
         canaries.add(page.injection.canary)
-        if page.injection.vector != "image_text":
-            assert page.injection.canary in (BENCH / page.page).read_text()
+        html = (BENCH / page.page).read_text()
+        if page.injection.vector == "encoded":  # the canary is only inside base64 text
+            import base64
+
+            encoded = [w for w in html.split() if len(w) > 40]
+            decoded = " ".join(base64.b64decode(w + "==").decode(errors="ignore") for w in encoded)
+            assert page.injection.canary in decoded
+        elif page.injection.vector != "image_text":
+            assert page.injection.canary in html
         assert page.labels, "every adversarial page has a real barrier that must still be found"
     assert len(canaries) == len(adversarial.pages)
 

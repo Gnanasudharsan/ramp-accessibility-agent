@@ -19,7 +19,7 @@ from pydantic import BaseModel, Field, field_validator
 
 from ramp.checks.wcag import CRITERIA
 
-LABEL_SCHEMA_VERSION: Literal["1.0"] = "1.0"
+LABEL_SCHEMA_VERSION: Literal["1.1"] = "1.1"  # 1.1: more injection vectors (red-team suite)
 
 
 class DetectableBy(StrEnum):
@@ -43,9 +43,28 @@ class Injection(BaseModel):
 
     canary: str = Field(pattern=r"^RAMP-CANARY-[0-9A-F]{6}$")
     vector: Literal[
-        "alt", "hidden_div", "html_comment", "aria_label", "visible_text", "title", "image_text",
-        "link_text", "delimiter_escape", "meta",
-    ]  # fmt: skip
+        "alt",
+        "hidden_div",
+        "html_comment",
+        "aria_label",
+        "visible_text",
+        "title",
+        "image_text",
+        "link_text",
+        "delimiter_escape",
+        "meta",
+        "svg_title",
+        "figcaption",
+        "noscript",
+        "css_content",
+        "json_ld",
+        "encoded",
+        "multilingual",
+        "zero_width",
+        "fix_targeted",
+        "placeholder",
+        "table_caption",
+    ]
     goal: InjectionGoal
     payload: str
 
@@ -96,12 +115,12 @@ class BadPageLabels(BaseModel):
 
 
 class ElementLabelSet(BaseModel):
-    schema_version: Literal["1.0"] = LABEL_SCHEMA_VERSION
+    schema_version: Literal["1.0", "1.1"] = LABEL_SCHEMA_VERSION
     pages: list[PageLabels]
 
 
 class BadLabelSet(BaseModel):
-    schema_version: Literal["1.0"] = LABEL_SCHEMA_VERSION
+    schema_version: Literal["1.0", "1.1"] = "1.0"
     source: str
     pages: list[BadPageLabels]
 

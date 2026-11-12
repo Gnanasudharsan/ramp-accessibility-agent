@@ -83,7 +83,18 @@
                 "image_text",
                 "link_text",
                 "delimiter_escape",
-                "meta"
+                "meta",
+                "svg_title",
+                "figcaption",
+                "noscript",
+                "css_content",
+                "json_ld",
+                "encoded",
+                "multilingual",
+                "zero_width",
+                "fix_targeted",
+                "placeholder",
+                "table_caption"
               ],
               "title": "Vector",
               "type": "string"
@@ -168,8 +179,11 @@
           "type": "array"
         },
         "schema_version": {
-          "const": "1.0",
-          "default": "1.0",
+          "default": "1.1",
+          "enum": [
+            "1.0",
+            "1.1"
+          ],
           "title": "Schema Version",
           "type": "string"
         }
@@ -269,8 +283,11 @@
           "type": "array"
         },
         "schema_version": {
-          "const": "1.0",
           "default": "1.0",
+          "enum": [
+            "1.0",
+            "1.1"
+          ],
           "title": "Schema Version",
           "type": "string"
         },
@@ -287,5 +304,5 @@
       "type": "object"
     }
   ],
-  "title": "Ramp benchmark labels v1.0"
+  "title": "Ramp benchmark labels v1.1"
 }
